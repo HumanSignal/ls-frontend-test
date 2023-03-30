@@ -72,7 +72,7 @@ yargs(hideBin(process.argv))
     const sourcePkg = JSON.parse(fs.readFileSync(path.resolve(assetsDir, 'package.json')).toString());
     const destPkg = JSON.parse(fs.readFileSync(path.resolve(workspaceDir, 'package.json')).toString());
 
-    destPkd.type = 'module';
+    destPkg.type = 'module';
     destPkg.scripts = {
       ...(destPkg.scripts ?? {}),
       ...sourcePkg.scripts,

@@ -15,3 +15,24 @@ yarn run lstest init
 It will init a new module package and will install everything you need.
 
 After that just `yarn test` for console-based testing or `yarn test:ui` from Cypress UI
+
+# Using helpers
+In you spec file:
+
+```javascript
+// For LSF Specific helpers
+import { LabelStudio } from '@heartexlabs/ls-test/helpers/LSF';
+
+// Or for all available helpers
+import { LSF } from '@heartexlabs/ls-test/helpers';
+
+// Usage
+describe('Test', () => {
+  it("Should pass", () => {
+    LSF.LabelStudio.init({
+      config: '<View></View>',
+      task: { annotations: [], predictions: [] }
+    });
+  });
+});
+```

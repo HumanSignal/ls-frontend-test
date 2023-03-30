@@ -4,17 +4,24 @@ This is pre-configured Cypress testing environment packed with helpers for each 
 
 If you want to install it to a new repo, run the following
 
-```
+```bash
+# Create test folder
 mkdir __test__
+# Change dir
 cd __test__
+# Init new package with all defaults
 yarn init --yes
+# Add ls-test to the package
 yarn add @heartexlabs/ls-test@https://github.com/heartexlabs/ls-frontend-test.git
+# Run a built-in init script to setup your environment
 yarn run lstest init
 ```
 
 It will init a new module package and will install everything you need.
 
-After that just `yarn test` for console-based testing or `yarn test:ui` from Cypress UI
+After that run
+- `yarn test` for console-based testing
+- `yarn test:ui` from Cypress UI
 
 # Using helpers
 In you spec file:

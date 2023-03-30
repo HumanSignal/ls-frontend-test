@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "cy": "./node_modules/.bin/cypress",
+    "test": "yarn run cy run",
+    "test:ui": "yarn run cy open"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.2"
+  }
+}

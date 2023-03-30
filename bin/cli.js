@@ -1,52 +1,92 @@
 #!/usr/bin/env node
 
-import cypress from 'cypress';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
-import childProcess from 'child_process';
-import { stdout } from 'process';
+import cp from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { stderr, stdout } from 'process';
 
-const defaultSettings = {
-  browser: 'chrome',
-};
+const packageDir = `./node_modules/@heartexlabs/ls-test`;
+const assetsDir = path.resolve(packageDir, 'bin/assets')
+const workspaceDir = path.resolve();
+const relativePath = p => path.resolve(assetsDir, p)
 
-const runner = (options, run = false) => {
-  const runnerConfig = { ...defaultSettings, ...options }; 
+const CREATE_DIRS = [
+  './cypress/support',
+  './specs'
+];
 
-  if (run) {
-    cypress.run(runnerConfig);
-  } else {
-    cypress.open(runnerConfig);
-  }
-};
+const CREATE_FILES = [
+  './cypress/support/e2e.js',
+  './specs/example.cy.ts',
+  './cypress.config.js',
+  './tsconfig.json',
+];
 
-const getSettings = (args) => {
-  const { help, _, ...rest } = args;
+const COPY_CONTENTS = [
+  [relativePath('spec.cy.ts'), './specs/example.cy.ts'],
+  [relativePath('cypress.config.js'), './cypress.config.js'],
+  [relativePath('tsconfig.json'), 'tsconfig.json'],
+];
 
-  if (help) {
-    stdout.write(childProcess.execSync('yarn run cypress run --help'));
-    process.exit(0);
-  }
+const runCommand = async (cmd, args, message) => {
+  return new Promise((resolve) => {
+    console.log(message);
 
-  if (_?.[1]) {
-    const specFile = _[1].toString();
+    const command = cp.spawn(cmd, args, {shell: true});
+    const err = [];
 
-    if (specFile.includes('.cy')) rest.spec = specFile;
-  }
+    command.stdout.on('data', (data) => {
+      stdout.write(data);
+    });
 
-  return rest;
-};
+    command.stderr.on('data', (data) => {
+      err.push(data.toString());
+    });
+
+    command.on('close', (code) => {
+      if (code !== 0) return resolve(new Error(err.join('\n')));
+      resolve();
+    });
+  });
+}
 
 yargs(hideBin(process.argv))
-  .command('run', 'run', () => {}, (args) => {
-    const settings = getSettings(args);
+  .command('init', 'Initialize framework', () => { }, async (args) => {
+    console.log('Preparing environment')
 
-    runner(settings, true);
-  })
-  .command('open', 'Open UI', () => {}, (args) => {
-    const settings = getSettings(args);
+    await Promise.all(CREATE_DIRS.map(dir => runCommand('mkdir', [
+      '-p',
+      dir
+    ], `Creating ${dir}`)));
 
-    runner(settings, false);
+    await Promise.all(CREATE_FILES.map(file => runCommand('touch', [
+      file
+    ], `Creating ${file}`)));
+
+    await Promise.all(COPY_CONTENTS.map(([source, dest]) => runCommand(`/bin/cat ${source} >> ${dest}`, [
+    ], `Copying ${path.basename(dest)}`)))
+
+    console.log('Adding test commands')
+    const sourcePkg = JSON.parse(fs.readFileSync(path.resolve(assetsDir, 'package.json')).toString());
+    const destPkg = JSON.parse(fs.readFileSync(path.resolve(workspaceDir, 'package.json')).toString());
+
+    destPkg.scripts = {
+      ...(destPkg.scripts ?? {}),
+      ...sourcePkg.scripts,
+    }
+
+    fs.writeFileSync('./package.json', JSON.stringify(destPkg, null, '  '));
+
+    await runCommand('yarn', [
+      'add',
+      '--dev',
+      'webpack',
+      'webpack-cli',
+      'typescript',
+      'ts-loader',
+    ], 'Installing packages');
   })
   .help(false)
   .parse();

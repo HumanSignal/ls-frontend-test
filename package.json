@@ -12,7 +12,9 @@
   },
   "main": "configure.js",
   "files": [
-    "./cypress/**"
+    "./cypress/**",
+    "./types/**",
+    "./helpers/**/*"
   ],
   "bin": {
     "lstest": "./bin/cli.js"

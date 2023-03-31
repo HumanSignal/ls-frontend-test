@@ -18,7 +18,7 @@ const CREATE_DIRS = [
 ];
 
 const CREATE_FILES = [
-  './cypress/support/e2e.js',
+  './cypress/support/e2e.ts',
   './specs/example.cy.ts',
   './cypress.config.js',
   './tsconfig.json',
@@ -28,6 +28,7 @@ const COPY_CONTENTS = [
   [relativePath('spec.cy.ts'), './specs/example.cy.ts'],
   [relativePath('cypress.config.js'), './cypress.config.js'],
   [relativePath('tsconfig.json'), 'tsconfig.json'],
+  [relativePath('e2e.ts'), './cypress/support/e2e.ts'],
 ];
 
 const runCommand = async (cmd, args, message) => {

@@ -12,7 +12,7 @@ cd __test__
 # Init new package with all defaults
 yarn init --yes
 # Add ls-test to the package
-yarn add @heartexlabs/ls-test@https://github.com/heartexlabs/ls-frontend-test.git
+yarn add git+ssh://git@github.com/heartexlabs/ls-frontend-test.git
 # Run a built-in init script to setup your environment
 yarn run lstest init
 ```

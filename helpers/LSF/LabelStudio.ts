@@ -55,6 +55,17 @@ export const LabelStudio = {
       });
   },
 
+
+  /**
+   * Set feature flags on navigation
+   */
+  setFeatureFlagsOnPageLoad(flags: Record<string, boolean>) {
+    Cypress
+      .on('window:before:load', win => {
+        win.__FEATURE_FLAGS__ = flags
+      });
+  },
+
   /**
    * Toggle feature flags on and off
    */

@@ -33,7 +33,11 @@ export const LabelStudio = {
       };
     });
 
-    cy.visit('/');
+    cy
+      .visit('/')
+      .then(win => {
+        cy.log(`Default feature flags set ${JSON.stringify(win.APP_SETTINGS.feature_flags, null, '  ')}`)
+      });
 
     cy
       .window()
@@ -55,7 +59,7 @@ export const LabelStudio = {
    * Toggle feature flags on and off
    */
   setFeatureFlags(flags: Record<string, boolean>) {
-    cy.on('window:before:load', (win) => {
+    Cypress.on('window:before:load', (win) => {
       win.APP_SETTINGS = win.APP_SETTINGS ?? {};
       win.APP_SETTINGS.feature_flags = win.APP_SETTINGS.feature_flags ?? {}
 

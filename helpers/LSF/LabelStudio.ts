@@ -59,12 +59,17 @@ export const LabelStudio = {
    * Toggle feature flags on and off
    */
   setFeatureFlags(flags: Record<string, boolean>) {
-    Cypress.on('window:before:load', (win) => {
-      win.APP_SETTINGS = win.APP_SETTINGS ?? {};
-      win.APP_SETTINGS.feature_flags = win.APP_SETTINGS.feature_flags ?? {}
-
-      Object.assign(win.APP_SETTINGS.feature_flags, flags)
-    });
+    cy.log("Setting feature flags")
+    cy
+      .window()
+      .then(win => {
+        win.APP_SETTINGS = win.APP_SETTINGS ?? {};
+        win.APP_SETTINGS.feature_flags = {
+          ...(win.APP_SETTINGS.feature_flags ?? {}),
+          ...flags,
+        }
+        console.log(win.APP_SETTINGS)
+      });
   },
 
   /**

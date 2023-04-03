@@ -6,6 +6,7 @@ export const LabelStudio = {
    */
   init(params: Record<string, any>) {
     Cypress.on('window:before:load', (win) => {
+      win.DEFAULT_LSF_INIT = false;
       win.LSF_CONFIG = {
         interfaces: [
           'panel',
@@ -37,6 +38,7 @@ export const LabelStudio = {
       .visit('/')
       .then(win => {
         cy.log(`Default feature flags set ${JSON.stringify(win.APP_SETTINGS.feature_flags, null, '  ')}`)
+        new win.LabelStudio('label-studio', win.LSF_CONFIG);
       });
 
     cy

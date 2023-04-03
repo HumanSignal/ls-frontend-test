@@ -1,14 +1,16 @@
 import { defineConfig } from 'cypress';
 import path from 'path';
-import wp from '@cypress/webpack-preprocessor';
+import { setupTypescript } from './plugins/typescript';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const localPath = p => path.resolve(process.env.PWD, p);
 
 /**
-* @param {(config: Cypress.ConfigOptions<any>) => Cypress.ConfigOptions<any>} config
+* Override Cypress settings
+* @param {(config: Cypress.ConfigOptions) => Cypress.ConfigOptions} configModifier
+* @param {Cypress.EndToEndConfigOptions["setupNodeEvents"]?} setupNodeEvents
 */
-export default function(configModifier) {
+export default function(configModifier, setupNodeEvents) {
   /** @type {Cypress.ConfigOptions<any>} */
   const defaultConfig = {
     // Assets configuration 
@@ -26,24 +28,8 @@ export default function(configModifier) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
-        const options = {
-          webpackOptions: {
-            resolve: {
-              extensions: ['.ts', '.tsx', '.js'],
-            },
-            module: {
-              rules: [
-                {
-                  test: /\.tsx?$/,
-                  loader: 'ts-loader',
-                  options: { transpileOnly: true },
-                },
-              ],
-            },
-          },
-        };
-
-        on('file:preprocessor', wp(options));
+        setupTypescript(on, config);
+        setupNodeEvents?.(on, config);
       },
     },
   }; 

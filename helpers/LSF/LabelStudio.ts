@@ -55,7 +55,6 @@ export const LabelStudio = {
       });
   },
 
-
   /**
    * Set feature flags on navigation
    */

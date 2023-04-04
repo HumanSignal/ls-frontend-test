@@ -5,7 +5,8 @@ export const LabelStudio = {
    * Initializes LabelStudio intance with given configuration
    */
   init(params: Record<string, any>) {
-    Cypress.on('window:before:load', (win) => {
+    cy.log("Initialize LSF")
+    const windowLoadCallback = (win: Cypress.AUTWindow) => {
       win.DEFAULT_LSF_INIT = false;
       win.LSF_CONFIG = {
         interfaces: [
@@ -32,18 +33,20 @@ export const LabelStudio = {
         ],
         ...params,
       };
-    });
+      
+      Cypress.off('window:before:load', windowLoadCallback);
+    }
+    Cypress.on('window:before:load', windowLoadCallback);
 
     cy
       .visit('/')
       .then(win => {
         cy.log(`Default feature flags set ${JSON.stringify(win.APP_SETTINGS.feature_flags, null, '  ')}`)
         new win.LabelStudio('label-studio', win.LSF_CONFIG);
+        expect(win.LabelStudio.instances.size).to.be.equal(1);
+        cy.get('.lsf-editor').should('be.visible');
+        cy.log("Label Studio initialized");
       });
-
-    cy
-      .window()
-      .then(win => expect(win.LabelStudio.instances.size).to.be.equal(1));
   },
 
   /**

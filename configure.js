@@ -1,6 +1,8 @@
 import { defineConfig } from 'cypress';
 import path from 'path';
 import { setupTypescript } from './plugins/typescript';
+import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
+import * as tasks from './tasks';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const localPath = p => path.resolve(process.env.PWD, p);
@@ -28,6 +30,10 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
+        on('task', {...tasks});
+        installLogsPrinter(on, {
+          outputVerbose: false
+        });
         setupTypescript(on, config);
         setupNodeEvents?.(on, config);
       },

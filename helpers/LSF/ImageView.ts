@@ -31,4 +31,31 @@ export const ImageView = {
       .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent' })
       .trigger('mouseup', { eventConstructor: 'MouseEvent' });
   },
+  /**
+   * Captures a screenshot of an element to compare later
+   * @param {string} name name of the screenshot
+   */
+  capture(name: string) {
+    return this.drawingArea.captureScreenshot(name);
+  },
+
+  /**
+   * Captures a new screenshot and compares it to already taken one
+   * Fails if screenshots are identical
+   * @param name name of the screenshot
+   * @param treshold to compare image. It's a relation between original number of pixels vs changed number of pixels
+   */
+  canvasShouldChange(name: string, treshold = 0.1) {
+    return this.drawingArea.compareScreenshot(name, 'shouldChange', treshold); 
+  },
+
+  /**
+   * Captures a new screenshot and compares it to already taken one
+   * Fails if screenshots are different
+   * @param name name of the screenshot
+   * @param treshold to compare image. It's a relation between original number of pixels vs changed number of pixels
+   */
+  canvasShouldNotChange(name: string, treshold = 0.1) {
+    return this.drawingArea.compareScreenshot(name, 'shouldNotChange', treshold); 
+  },
 };

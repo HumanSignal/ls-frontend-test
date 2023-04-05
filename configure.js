@@ -3,7 +3,7 @@ import path from 'path';
 import { setupTypescript } from './plugins/typescript';
 import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
 import * as tasks from './tasks';
-import { disableGPU } from './plugins/disable_gpu';
+import { disableChromeGPU  } from './plugins/disable_gpu';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const localPath = p => path.resolve(process.env.PWD, p);
@@ -37,7 +37,7 @@ export default function(configModifier, setupNodeEvents) {
         });
         setupTypescript(on, config);
         setupNodeEvents?.(on, config);
-        disableGPU(on);
+        disableChromeGPU(on);
       },
     },
   }; 

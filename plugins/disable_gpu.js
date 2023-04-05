@@ -1,4 +1,4 @@
-export const disableGPU = (on) => {
+export const disableChromeGPU = (on) => {
     on('before:browser:launch', (browser = {}, launchOptions) => {
       console.log(launchOptions.args)
   

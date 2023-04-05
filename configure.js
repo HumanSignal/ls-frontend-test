@@ -10,8 +10,6 @@ const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
 const localPath = p => path.resolve(process.env.PWD, p);
 
-console.log({COLLECT_COVERAGE})
-
 /**
 * Override Cypress settings
 * @param {(config: Cypress.ConfigOptions) => Cypress.ConfigOptions} configModifier
@@ -28,6 +26,9 @@ export default function(configModifier, setupNodeEvents) {
     fixturesFolder: localPath('./fixtures'),
     trashAssetsBeforeRuns: true,
     videoUploadOnPasses: false,
+    env: {
+      coverage: COLLECT_COVERAGE,
+    },
     e2e: {
       baseUrl: `http://localhost:${LSF_PORT}`,
       specPattern: './specs/**/*.cy.ts',
@@ -35,10 +36,7 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
-        if (COLLECT_COVERAGE) {
-          console.log("Coverage collection enabled")
-          cypressCoverageTask(on, config);
-        }
+        cypressCoverageTask(on, config);
         on('task', { ...tasks });
         installLogsPrinter(on, {
           outputVerbose: false

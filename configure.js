@@ -3,12 +3,14 @@ import path from 'path';
 import { setupTypescript } from './plugins/typescript';
 import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
 import * as tasks from './tasks';
-import { disableChromeGPU  } from './plugins/disable_gpu';
+import { disableChromeGPU } from './plugins/disable_gpu';
 import cypressCoverageTask from '@cypress/code-coverage/task';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
-const COVERAGE = process.env.COVERAGE === 'true' || process.env.COVERAGE === '1';
+const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
 const localPath = p => path.resolve(process.env.PWD, p);
+
+console.log({COLLECT_COVERAGE})
 
 /**
 * Override Cypress settings
@@ -27,14 +29,17 @@ export default function(configModifier, setupNodeEvents) {
     trashAssetsBeforeRuns: true,
     videoUploadOnPasses: false,
     e2e: {
-      baseUrl: `http://localhost:${ LSF_PORT }`,
+      baseUrl: `http://localhost:${LSF_PORT}`,
       specPattern: './specs/**/*.cy.ts',
       viewportWidth: 1600,
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
-        if (COVERAGE) cypressCoverageTask(on, config);
-        on('task', {...tasks});
+        if (COLLECT_COVERAGE) {
+          console.log("Coverage collection enabled")
+          cypressCoverageTask(on, config);
+        }
+        on('task', { ...tasks });
         installLogsPrinter(on, {
           outputVerbose: false
         });
@@ -44,11 +49,11 @@ export default function(configModifier, setupNodeEvents) {
         return config;
       },
     },
-  }; 
-  
+  };
+
   const finalConfig = configModifier
     ? configModifier(defaultConfig)
-    : defaultConfig; 
+    : defaultConfig;
 
   return defineConfig(finalConfig);
 } 

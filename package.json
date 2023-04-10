@@ -23,7 +23,7 @@
     "@cypress/code-coverage": "^3.10.0",
     "@cypress/webpack-preprocessor": "^5.17.0",
     "chai": "^4.3.7",
-    "cypress": "^12.7.0",
+    "cypress": "^12.9.0",
     "cypress-multi-reporters": "^1.6.2",
     "cypress-parallel": "^0.12.0",
     "cypress-plugin-snapshots": "^1.4.4",
@@ -37,7 +37,7 @@
     "yargs": "^17.7.1"
   },
   "devDependencies": {
-    "eslint": "^8.37.0",
-    "@heartexlabs/eslint-plugin-frontend": "https://github.com/heartexlabs/eslint-plugin-frontend"
+    "@heartexlabs/eslint-plugin-frontend": "https://github.com/heartexlabs/eslint-plugin-frontend",
+    "eslint": "^8.37.0"
   }
 }

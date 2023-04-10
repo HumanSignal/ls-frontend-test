@@ -84,10 +84,10 @@ yargs(hideBin(process.argv))
     await runCommand('yarn', [
       'add',
       '--dev',
-      'webpack',
-      'webpack-cli',
-      'typescript',
-      'ts-loader',
+      'webpack@5',
+      'webpack-cli@5',
+      'typescript@5',
+      'ts-loader@9.4',
     ], 'Installing packages');
   })
   .help(false)

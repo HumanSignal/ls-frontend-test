@@ -36,13 +36,17 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
+        // Allows collecting coverage
         cypressCoverageTask(on, config);
         on('task', { ...tasks });
+        // Gives a step-by-step output for failed tests in headless mode
         installLogsPrinter(on, {
           outputVerbose: false
         });
+        // Allows compiling TS files from node_modules (this package)
         setupTypescript(on, config);
         setupNodeEvents?.(on, config);
+        // When running in headless on the CI, there's no GPU acceleration available
         disableChromeGPU(on);
         return config;
       },

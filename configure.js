@@ -8,7 +8,7 @@ import cypressCoverageTask from '@cypress/code-coverage/task';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
-const localPath = p => path.resolve(process.env.PWD, p);
+const localPath = p => path.resolve(process.cwd(), p);
 
 /**
 * Override Cypress settings

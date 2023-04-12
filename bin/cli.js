@@ -5,7 +5,7 @@ import { hideBin } from 'yargs/helpers';
 import cp from 'child_process';
 import path from 'path';
 import fs from 'fs';
-import { stderr, stdout } from 'process';
+import { stdout } from 'process';
 
 const packageDir = `./node_modules/@heartexlabs/ls-test`;
 const assetsDir = path.resolve(packageDir, 'bin/assets')
@@ -35,7 +35,7 @@ const runCommand = async (cmd, args, message) => {
   return new Promise((resolve) => {
     console.log(message);
 
-    const command = cp.spawn(cmd, args, {shell: true});
+    const command = cp.spawn(cmd, args, { shell: true });
     const err = [];
 
     command.stdout.on('data', (data) => {

@@ -66,7 +66,7 @@ export const LabelStudio = {
   setFeatureFlagsOnPageLoad(flags: Record<string, boolean>) {
     Cypress
       .on('window:before:load', win => {
-        win.__FEATURE_FLAGS__ = flags
+        win.FEATURE_FLAGS = flags;
       });
   },
 

@@ -33,7 +33,7 @@ export const LabelStudio = {
         ],
         ...params,
       };
-      
+
       Cypress.off('window:before:load', windowLoadCallback);
     }
     Cypress.on('window:before:load', windowLoadCallback);
@@ -97,6 +97,16 @@ export const LabelStudio = {
       .then(flagValue => {
         expect(flagValue).to.be.eq(enabled);
       });
+  },
+
+  /**
+   * Returns Cypress wrapper around a feature flag value.
+   * Allows performing asserions on it using `.should()`
+   */
+  featureFlag(flagName: string) {
+    return this.getFeatureFlag(flagName).then(flagValue => {
+      return flagValue;
+    })
   },
 
   /**

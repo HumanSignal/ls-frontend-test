@@ -8,7 +8,7 @@ export const Sidebar = {
   get legacySidebar() {
     return cy.get('.lsf-sidebar-tabs');
   },
-  get regions(){
+  get regions() {
     if (LabelStudio.getFeatureFlag(FF_DEV_1170)) {
       return this.outliner
         .should('be.visible')
@@ -24,5 +24,19 @@ export const Sidebar = {
   },
   hasNoRegions() {
     this.regions.should('not.exist');
+  },
+  hasSelectedRegions(value: number) {
+    this.regions.filter('.lsf-tree-node-selected').should('have.length', value);
+  },
+
+  toggleRegionVisibility(idx) {
+    this.regions
+      .eq(idx)
+      // Hover to see action button. (Hover will not work actually)
+      // It will not show hidden elements, but it will generate correct elements in react
+      .trigger('mouseover')
+      .find('.lsf-outliner-item__controls')
+      .find('.lsf-outliner-item__control_type_visibility button')
+      .click({ force: true });
   },
 };

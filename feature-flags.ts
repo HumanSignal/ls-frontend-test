@@ -201,6 +201,13 @@ export const FF_LSDV_4701 = 'fflag_feat_front_lsdv_4701_audio_default_decoder_ff
  */
 export const FF_LSDV_4659 = 'fflag_feat_front_lsdv_4659_skipduplicates_060323_short';
 
+/**
+ * Fixing issues related to selection tool functional (selecting hidden regions, onClick in Konva, interaction with regions inside selection area)
+ *
+ * @link https://app.launchdarkly.com/default/production/features/fflag_fix_front_lsdv_4930_selection_tool_fixes_240423_short
+ */
+export const FF_LSDV_4930 = 'fflag_fix_front_lsdv_4930_selection_tool_fixes_240423_short';
+
 Object.assign(window, {
   APP_SETTINGS: {
     ...(window.APP_SETTINGS ?? {}),

@@ -127,6 +127,14 @@ export const ImageView = {
     return this.drawingArea.compareScreenshot(name, 'shouldNotChange', treshold); 
   },
 
+  selectRectangleToolByButton() {
+    this.toolBar
+      .find('[aria-label="rectangle-tool"]')
+      .should('be.visible')
+      .click()
+      .should('have.class', 'lsf-tool_active');
+  },
+
   selectMoveToolByButton() {
     this.toolBar
       .find('[aria-label="move-tool"]')

@@ -76,9 +76,9 @@ export const ImageView = {
     cy.log(`Draw rectangle at (${x}, ${y}) of size ${width}x${height}`);
     this.drawingArea
       .scrollIntoView()
-      .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', ...options })
-      .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', ...options })
-      .trigger('mouseup', x + width, y + height, { eventConstructor: 'MouseEvent', ...options });
+      .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
+      .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
+      .trigger('mouseup', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
   },
   /**
    * Draws the rectangle on the drawing area with coordinates and size relative to the drawing area.

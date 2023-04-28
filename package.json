@@ -1,6 +1,6 @@
 {
   "name": "@heartexlabs/ls-test",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -14,23 +14,45 @@
   "files": [
     "./cypress/**/*",
     "./types/**/*",
-    "./helpers/**/*"
+    "./helpers/**/*",
+    "./unit/**/*"
   ],
   "bin": {
     "lstest": "./bin/cli.js"
   },
+  "peerDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/plugin-proposal-class-properties": "^7.12.13",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.13",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.17",
+    "@babel/plugin-transform-runtime": "^7.12.15",
+    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@babel/runtime": "^7.12.13"
+  },
   "dependencies": {
     "@cypress/code-coverage": "^3.10.0",
     "@cypress/webpack-preprocessor": "^5.17.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/user-event": "^14.4.3",
+    "@testing-library/react": "12.1.2",
+    "babel-jest": "^29.3.1",
     "chai": "^4.3.7",
     "cypress": "^12.9.0",
     "cypress-multi-reporters": "^1.6.2",
     "cypress-parallel": "^0.12.0",
     "cypress-plugin-snapshots": "^1.4.4",
     "cypress-terminal-report": "^5.1.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.3.1",
+    "jest-canvas-mock": "^2.4.0",
+    "jest-environment-jsdom": "^29.3.1",
+    "jest-fetch-mock": "^3.0.3",
     "pixelmatch": "^5.3.0",
     "pngjs": "^7.0.0",
     "ts-loader": "^9.4.2",
+    "ts-jest": "^29.0.3",
     "typescript": "^4.9.5",
     "webpack": "^5.77.0",
     "webpack-cli": "^5.0.1",

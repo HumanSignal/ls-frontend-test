@@ -8,7 +8,7 @@ export const Sidebar = {
   get legacySidebar() {
     return cy.get('.lsf-sidebar-tabs');
   },
-  get regions(){
+  get regions() {
     if (LabelStudio.getFeatureFlag(FF_DEV_1170)) {
       return this.outliner
         .should('be.visible')
@@ -24,5 +24,8 @@ export const Sidebar = {
   },
   hasNoRegions() {
     this.regions.should('not.exist');
+  },
+  hasSelectedRegions(value: number) {
+    this.regions.filter('.lsf-tree-node-selected').should('have.length', value);
   },
 };

@@ -4,6 +4,9 @@ const options = {
   webpackOptions: {
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
+      alias: {
+        'data': process.cwd() + '/data',
+      },
     },
     module: {
       rules: [
@@ -23,4 +26,4 @@ const options = {
  */
 export const setupTypescript = (on) => {
   on('file:preprocessor', wp(options));
-}
+};

@@ -24,7 +24,7 @@ export default function(configModifier, setupNodeEvents) {
     screenshotsFolder: localPath('./output/screenshots'),
     downloadsFolder: localPath('./output/downloads'),
     fixturesFolder: localPath('./fixtures'),
-    trashAssetsBeforeRuns: true,
+    trashAssetsBeforeRuns: false, // Kills ability to run in parallel, must be off
     videoUploadOnPasses: false,
     env: {
       coverage: COLLECT_COVERAGE,

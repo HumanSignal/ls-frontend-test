@@ -1,11 +1,122 @@
 import { expect } from 'chai';
 
+type LSParams = Record<string, any>;
+
+class LSParamsBuilder {
+  params: LSParams = {
+    config: '<View></View>',
+    interfaces: [
+      'panel',
+      'update',
+      'submit',
+      'skip',
+      'controls',
+      'infobar',
+      'topbar',
+      'instruction',
+      'side-column',
+      'ground-truth',
+      'annotations:tabs',
+      'annotations:menu',
+      'annotations:current',
+      'annotations:add-new',
+      'annotations:delete',
+      'annotations:view-all',
+      'predictions:tabs',
+      'predictions:menu',
+      'auto-annotation',
+      'edit-history',
+    ],
+    task: {
+      id: 1,
+      data: {},
+      annotations: [],
+      predictions: [],
+    },
+  };
+  private ls: typeof LabelStudio = null;
+
+  constructor(ls: typeof LabelStudio) {
+    this.ls = ls;
+  }
+
+  init() {
+    this.ls.init(this.params);
+  }
+
+  private get _task() {
+    if (!this.params.task) {
+      this.params.task = {
+        id: 1,
+      };
+    }
+    return this.params.task;
+  }
+
+  private get _annotations() {
+    const task = this._task;
+
+    if (!task.annotations) {
+      task.annotations = [];
+    }
+    return task.annotations;
+  }
+
+  config(config) {
+    this.params.config = config;
+    return this;
+  }
+  data(data) {
+    this.params.task.data = data;
+    return this;
+  }
+  task(task) {
+    this.params.task = task;
+    return this;
+  }
+  annotations(annotations) {
+    this._task.annotations = annotations;
+    return this;
+  }
+  withAnnotation(annotation) {
+    this._annotations.push(annotation);
+    return this;
+  }
+  withResult(result) {
+    this._annotations.push({
+      id: this._annotations.length + 1001,
+      result,
+    });
+    return this;
+  }
+  interfaces(interfaces) {
+    this.params.interfaces = interfaces;
+    return this;
+  }
+  withInterface(interfaceName: string) {
+    if (this.params.interfaces.indexOf(interfaceName) < 0) {
+      this.params.interfaces.push(interfaceName);
+    }
+    return this;
+
+  }
+  withoutInterface(interfaceName: string) {
+    const idx = this.params.interfaces.indexOf(interfaceName);
+    const isExist = idx >= 0;
+
+    if (isExist) {
+      this.params.interfaces.splice(idx, 1);
+    }
+    return this;
+  }
+}
+
 export const LabelStudio = {
   /**
    * Initializes LabelStudio intance with given configuration
    */
-  init(params: Record<string, any>) {
-    cy.log("Initialize LSF")
+  init(params: LSParams) {
+    cy.log('Initialize LSF'); 
     const windowLoadCallback = (win: Cypress.AUTWindow) => {
       win.DEFAULT_LSF_INIT = false;
       win.LSF_CONFIG = {
@@ -35,18 +146,23 @@ export const LabelStudio = {
       };
 
       Cypress.off('window:before:load', windowLoadCallback);
-    }
+    };
+
     Cypress.on('window:before:load', windowLoadCallback);
 
     cy
       .visit('/')
       .then(win => {
-        cy.log(`Default feature flags set ${JSON.stringify(win.APP_SETTINGS.feature_flags, null, '  ')}`)
+        cy.log(`Default feature flags set ${JSON.stringify(win.APP_SETTINGS.feature_flags, null, '  ')}`);
         new win.LabelStudio('label-studio', win.LSF_CONFIG);
         expect(win.LabelStudio.instances.size).to.be.equal(1);
         cy.get('.lsf-editor').should('be.visible');
-        cy.log("Label Studio initialized");
+        cy.log('Label Studio initialized');
       });
+  },
+
+  params() {
+    return new LSParamsBuilder(this);
   },
 
   /**
@@ -71,10 +187,23 @@ export const LabelStudio = {
   },
 
   /**
+   * Add new settings to previously set feature flags on navigation
+   */
+  addFeatureFlagsOnPageLoad(flags: Record<string, boolean>) {
+    Cypress
+      .on('window:before:load', win => {
+        win.FEATURE_FLAGS = {
+          ...(win.FEATURE_FLAGS || {}),
+          ...flags
+        };
+      });
+  },
+
+  /**
    * Toggle feature flags on and off
    */
   setFeatureFlags(flags: Record<string, boolean>) {
-    cy.log("Setting feature flags")
+    cy.log('Setting feature flags');
     cy
       .window()
       .then(win => {
@@ -82,8 +211,8 @@ export const LabelStudio = {
         win.APP_SETTINGS.feature_flags = {
           ...(win.APP_SETTINGS.feature_flags ?? {}),
           ...flags,
-        }
-        console.log(win.APP_SETTINGS)
+        };
+        console.log(win.APP_SETTINGS);
       });
   },
 
@@ -106,7 +235,7 @@ export const LabelStudio = {
   featureFlag(flagName: string) {
     return this.getFeatureFlag(flagName).then(flagValue => {
       return flagValue;
-    })
+    });
   },
 
   /**

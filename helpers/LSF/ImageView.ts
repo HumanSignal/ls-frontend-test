@@ -4,12 +4,28 @@ export const ImageView = {
     return cy
       .get('img[alt=LS]');
   },
+  get root() {
+    return this.image
+      .closest('.lsf-object');
+  },
   get drawingArea() {
     cy.log('Get Konva.js root');
     return this.image
       .closest('[class^="frame--"]')
       .siblings()
       .get('[class^="image-element--"] .konvajs-content');
+  },
+  get pagination() {
+    return this.root
+      .get('[class^="pagination--"]');
+  },
+  get paginationPrevBtn() {
+    return this.pagination
+      .get('.lsf-pagination__btn_arrow-left:not(.lsf-pagination__btn_arrow-left-double)');
+  },
+  get paginationNextBtn() {
+    return this.pagination
+      .get('.lsf-pagination__btn_arrow-right:not(.lsf-pagination__btn_arrow-right-double)');
   },
   waitForImage() {
     cy.log('Make sure that the image is visible and loaded');

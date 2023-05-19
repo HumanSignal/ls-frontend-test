@@ -8,16 +8,24 @@ export const Sidebar = {
   get legacySidebar() {
     return cy.get('.lsf-sidebar-tabs');
   },
-  get regions(){
-    if (LabelStudio.getFeatureFlag(FF_DEV_1170)) {
-      return this.outliner
-        .should('be.visible')
-        .get('.lsf-tree-node-content-wrapper');
-    }
+  get regions() {
+    return LabelStudio.getFeatureFlag(FF_DEV_1170).then(isFFDEV1170 => {
+      if (isFFDEV1170) {
+        return this.outliner
+          .should('be.visible')
+          .get('.lsf-tree-node-content-wrapper');
+      }
 
-    return this.legacySidebar
-      .should('be.visible')
-      .get('.lsf-region-item');
+      return this.legacySidebar
+        .should('be.visible')
+        .get('.lsf-region-item');
+    }); 
+  },
+  findRegion(selector: string) {
+    return this.regions.filter(selector);
+  },
+  findRegionByIndex(idx: number) {
+    return this.findRegion(`:eq(${idx})`);
   },
   hasRegions(value: number) {
     this.regions.should('have.length', value);

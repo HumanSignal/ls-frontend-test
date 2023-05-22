@@ -55,7 +55,7 @@ export const VideoView = {
    */
   clickAtRelative(x: number, y: number, options?: Partial<ClickOptions>) {
     this.drawingArea.then(el => {
-      const bbox:DOMRect = el[0].getBoundingClientRect();
+      const bbox: DOMRect = el[0].getBoundingClientRect();
       const realX = x * bbox.width;
       const realY = y * bbox.height;
 
@@ -70,7 +70,7 @@ export const VideoView = {
    * @param {number} width
    * @param {number} height
    */
-  drawRect(x: number, y: number, width: number, height: number, options:MouseInteractionOptions = {}) {
+  drawRect(x: number, y: number, width: number, height: number, options: MouseInteractionOptions = {}) {
     cy.log(`Draw rectangle at (${x}, ${y}) of size ${width}x${height}`);
     this.drawingArea
       .scrollIntoView()
@@ -90,9 +90,9 @@ export const VideoView = {
    * @param {number} width
    * @param {number} height
    */
-  drawRectRelative(x: number, y: number, width: number, height: number, options:MouseInteractionOptions = {}) {
+  drawRectRelative(x: number, y: number, width: number, height: number, options: MouseInteractionOptions = {}) {
     this.drawingArea.then(el => {
-      const bbox:DOMRect = el[0].getBoundingClientRect();
+      const bbox: DOMRect = el[0].getBoundingClientRect();
       const realX = x * bbox.width;
       const realY = y * bbox.height;
       const realWidth = width * bbox.width;
@@ -108,7 +108,7 @@ export const VideoView = {
     cy.log(`Click at ${idx} on the timeline`);
 
     this.timeLineLabels.then(el => {
-      const bbox:DOMRect = el[0].getBoundingClientRect();
+      const bbox: DOMRect = el[0].getBoundingClientRect();
       const pointX = bbox.width + (idx - 0.5) * FRAME_WIDTH;
       const pointY = FRAME_RESERVED_HEIGHT / 2;
 

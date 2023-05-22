@@ -187,6 +187,19 @@ export const LabelStudio = {
   },
 
   /**
+   * Add new settings to previously set feature flags on navigation
+   */
+  addFeatureFlagsOnPageLoad(flags: Record<string, boolean>) {
+    Cypress
+      .on('window:before:load', win => {
+        win.FEATURE_FLAGS = {
+          ...(win.FEATURE_FLAGS || {}),
+          ...flags
+        };
+      });
+  },
+
+  /**
    * Toggle feature flags on and off
    */
   setFeatureFlags(flags: Record<string, boolean>) {

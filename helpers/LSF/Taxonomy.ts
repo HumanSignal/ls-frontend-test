@@ -1,9 +1,9 @@
-import { FF_DEV_2007 } from '../../feature-flags'
+import { FF_DEV_2007 } from '../../feature-flags';
 import { LabelStudio } from './LabelStudio';
 
 class CTaxonomy {
   private get _baseRootSelector() {
-    return ".taxonomy";
+    return '.taxonomy';
   }
 
   private _rootSelector: string
@@ -21,7 +21,7 @@ class CTaxonomy {
   }
   get dropdown() {
     return this.root
-      .find('[class^=taxonomy__dropdown]')
+      .find('[class^=taxonomy__dropdown]');
   }
   findItem(text) {
     return this.dropdown
@@ -44,9 +44,9 @@ class CTaxonomy {
 const Taxonomy = new CTaxonomy('&:eq(0)');
 const useTaxonomy = (rootSelector: string) => {
   return new CTaxonomy(rootSelector);
-}
+};
 
 export {
   Taxonomy,
   useTaxonomy
-}
+};

@@ -37,6 +37,9 @@ export const Sidebar = {
       .trigger('mouseover')
       .find('.lsf-outliner-item__controls')
       .find('.lsf-outliner-item__control_type_visibility button')
+      // Use force click for clicking on the element that is still hidden
+      // (cypress's hover problem)
+      // @link https://docs.cypress.io/api/commands/hover#Example-of-clicking-on-a-hidden-element
       .click({ force: true });
   },
 };

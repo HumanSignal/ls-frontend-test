@@ -27,9 +27,9 @@ export const ImageView = {
     cy.log(`Draw rectangle at (${x}, ${y}) of size ${width}x${height}`);
     this.drawingArea
       .scrollIntoView()
-      .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', button: 1 })
-      .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', button: 1 })
-      .trigger('mouseup', x + width, y + height,{ eventConstructor: 'MouseEvent', button: 1 });
+      .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent' })
+      .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent' })
+      .trigger('mouseup', x + width, y + height,{ eventConstructor: 'MouseEvent' });
   },
   /**
    * Captures a screenshot of an element to compare later

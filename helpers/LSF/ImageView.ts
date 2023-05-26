@@ -29,7 +29,7 @@ export const ImageView = {
       .scrollIntoView()
       .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent' })
       .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent' })
-      .trigger('mouseup', { eventConstructor: 'MouseEvent' });
+      .trigger('mouseup', x + width, y + height,{ eventConstructor: 'MouseEvent' });
   },
   /**
    * Captures a screenshot of an element to compare later

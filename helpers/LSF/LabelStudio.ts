@@ -194,7 +194,7 @@ export const LabelStudio = {
       .on('window:before:load', win => {
         win.FEATURE_FLAGS = {
           ...(win.FEATURE_FLAGS || {}),
-          ...flags
+          ...flags,
         };
       });
   },

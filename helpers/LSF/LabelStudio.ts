@@ -116,7 +116,7 @@ export const LabelStudio = {
    * Initializes LabelStudio intance with given configuration
    */
   init(params: LSParams) {
-    cy.log('Initialize LSF'); 
+    cy.log('Initialize LSF');
     const windowLoadCallback = (win: Cypress.AUTWindow) => {
       win.DEFAULT_LSF_INIT = false;
       win.LSF_CONFIG = {
@@ -177,6 +177,28 @@ export const LabelStudio = {
   },
 
   /**
+   * Wait until the objects are ready for interactions
+   * It uses inner logic of LabelStudio's object tag models
+   */
+  waitForObjectsReady() {
+    cy.window().then(win => {
+      return new Promise(resolve => {
+        const watchObjectsReady = () => {
+          const isReady = win.Htx.annotationStore.selected.objects.every(object => object.isReady);
+
+          if (isReady) {
+            resolve(true);
+          } else {
+            setTimeout(watchObjectsReady, 16);
+          }
+        };
+
+        watchObjectsReady();
+      });
+    });
+  },
+
+  /**
    * Set feature flags on navigation
    */
   setFeatureFlagsOnPageLoad(flags: Record<string, boolean>) {
@@ -194,7 +216,7 @@ export const LabelStudio = {
       .on('window:before:load', win => {
         win.FEATURE_FLAGS = {
           ...(win.FEATURE_FLAGS || {}),
-          ...flags
+          ...flags,
         };
       });
   },

@@ -1,11 +1,17 @@
 declare namespace Cypress {
+  interface Tresholdable {
+    treshold?: number;
+  }
+  interface CompareScreenshotOptions extends ScreenshotOptions {
+    withHidden: string[];
+  }
   interface Chainable {
     /**
      * Custom command to select DOM element by data-cy attribute.
      * @example cy.dataCy('greeting')
      */
-    captureScreenshot(name: string): Chainable<JQuery<Element>>;
-    compareScreenshot(name: string, assert: 'shouldChange' | 'shouldNotChange' | 'diff', treshold?: number): Chainable<JQuery<Element>>;
+    captureScreenshot(name: string, screenshotCaptureOptions?: Partial<Loggable & Timeoutable & CompareScreenshotOptions>): Chainable<JQuery<Element>>;
+    compareScreenshot(name: string, assert: 'shouldChange' | 'shouldNotChange' | 'diff', screenshotCompareOptions?: Partial<Loggable & Timeoutable & CompareScreenshotOptions & Tresholdable>): Chainable<JQuery<Element>>;
   }
 }
 

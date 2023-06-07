@@ -62,7 +62,7 @@ export const ImageView = {
    * @param treshold to compare image. It's a relation between original number of pixels vs changed number of pixels
    */
   canvasShouldChange(name: string, treshold = 0.1) {
-    return this.drawingArea.compareScreenshot(name, 'shouldChange', treshold); 
+    return this.drawingArea.compareScreenshot(name, 'shouldChange', { treshold });
   },
 
   /**
@@ -72,6 +72,6 @@ export const ImageView = {
    * @param treshold to compare image. It's a relation between original number of pixels vs changed number of pixels
    */
   canvasShouldNotChange(name: string, treshold = 0.1) {
-    return this.drawingArea.compareScreenshot(name, 'shouldNotChange', treshold); 
+    return this.drawingArea.compareScreenshot(name, 'shouldNotChange', { treshold });
   },
 };

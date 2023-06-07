@@ -36,7 +36,7 @@ class ChoicesHelper {
       .then(choiceSelector => {
         return this.root
           .contains(choiceSelector, text);
-      }); 
+      });
   }
 
   findCheckedChoice(text: string) {
@@ -48,7 +48,7 @@ class ChoicesHelper {
   }
 
   hasCheckedChoice(text: string) {
-    this.findCheckedChoice(text)
+    this.findCheckedChoice(text);
       .should('be.visible');
   }
 

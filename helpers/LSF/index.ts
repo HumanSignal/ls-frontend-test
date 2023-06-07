@@ -2,6 +2,7 @@ export { ImageView } from './ImageView';
 export { Labels } from './Labels';
 export { LabelStudio } from './LabelStudio';
 export { Sidebar } from './Sidebar';
+export { VideoView } from './VideoView';
 export { Tooltip } from './Tooltip';
 export { DateTime, useDateTime } from './DateTime';
 export { Choices, useChoices } from './Choices';

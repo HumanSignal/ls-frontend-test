@@ -48,7 +48,7 @@ class ChoicesHelper {
   }
 
   hasCheckedChoice(text: string) {
-    this.findCheckedChoice(text);
+    this.findCheckedChoice(text)
       .should('be.visible');
   }
 

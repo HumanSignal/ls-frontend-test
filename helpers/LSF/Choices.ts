@@ -1,13 +1,13 @@
-import { FF_DEV_2007 } from '../../feature-flags'
+import { FF_DEV_2007 } from '../../feature-flags';
 import { LabelStudio } from './LabelStudio';
 
 class CChoices {
   private get _baseRootSelector() {
-    return ".lsf-choices";
+    return '.lsf-choices';
   }
   private getСhoiceSelector() {
     return LabelStudio.getFeatureFlag(FF_DEV_2007).then(isFFDev2007 => {
-      return isFFDev2007 ? `.lsf-choice__item .ant-checkbox + span` : '.ant-checkbox-wrapper';
+      return isFFDev2007 ? '.lsf-choice__item .ant-checkbox + span' : '.ant-checkbox-wrapper';
     });
   }
 
@@ -30,13 +30,13 @@ class CChoices {
       .then(choiceSelector => {
         return this.root
           .find(choiceSelector)
-          .contains(text)
-      })
+          .contains(text);
+      });
   }
 
   toggleSelect() {
     this.select
-      .click('right')
+      .click('right');
   }
 
   findOption(text: string) {
@@ -49,9 +49,9 @@ class CChoices {
 const Choices = new CChoices('&:eq(0)');
 const useChoices = (rootSelector: string) => {
   return new CChoices(rootSelector);
-}
+};
 
 export {
   Choices,
   useChoices
-}
+};

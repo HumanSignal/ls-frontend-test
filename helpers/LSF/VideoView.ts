@@ -4,34 +4,38 @@ import ClickOptions = Cypress.ClickOptions
 
 type MouseInteractionOptions = Partial<TriggerOptions & ObjectLike & MouseEvent>
 
-export const ImageView = {
-  get image() {
-    cy.log('Get main image');
-    return cy
-      .get('img[alt=LS]');
-  },
+// The width of the frame item on the timeline
+const FRAME_WIDTH = 16;
+// The height of the area on the timeline reserved to interactions
+const FRAME_RESERVED_HEIGHT = 24;
+
+export const VideoView = {
   get root() {
-    return this.image
-      .closest('.lsf-object');
+    cy.log('Get VideoView\'s root');
+    return cy
+      .get('.lsf-video-segmentation');
   },
   get drawingArea() {
-    cy.log('Get Konva.js root');
-    return this.image
-      .closest('[class^="frame--"]')
-      .siblings()
-      .get('[class^="image-element--"] .konvajs-content');
+    cy.log('Get VideoView\'s drawing area');
+    return this
+      .root
+      .get('.konvajs-content');
   },
-  waitForImage() {
-    cy.log('Make sure that the image is visible and loaded');
-    this.image
-      .should('be.visible')
-      .and((img) => {
-        return expect((img[0] as HTMLImageElement).naturalWidth).to.be.greaterThan(0); 
-      });
-
-    this.drawingArea
-      .get('canvas')
-      .should('be.visible');
+  get timelineContainer() {
+    return this.root
+      .get('.lsf-video-segmentation__timeline');
+  },
+  get timelineToolbar() {
+    return this.root
+      .get('.lsf-timeline__topbar');
+  },
+  get timeLineLabels() {
+    return this.root
+      .get('.lsf-timeline-frames__labels-bg');
+  },
+  get timeframesArea() {
+    return this.root
+      .get('.lsf-timeline-frames__scroll');
   },
   /**
    * Clicks at the coordinates on the drawing area
@@ -72,7 +76,11 @@ export const ImageView = {
       .scrollIntoView()
       .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
       .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
-      .trigger('mouseup',  { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+      .trigger('mouseup', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
+      // We need this while the Video tag creates new regions in useEffect hook (it means not immediately)
+      // This problem could be solved in VideoRegions component of lsf
+      // Without this wait we get absence of a region on screenshots
+      .wait(0);
   },
   /**
    * Draws the rectangle on the drawing area with coordinates and size relative to the drawing area.
@@ -94,11 +102,29 @@ export const ImageView = {
     });
   },
   /**
+   * Click at visible frame on the timeline
+   */
+  clickAtFrame(idx, options?: Partial<ClickOptions>) {
+    cy.log(`Click at ${idx} on the timeline`);
+
+    this.timeLineLabels.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+      const pointX = bbox.width + (idx - 0.5) * FRAME_WIDTH;
+      const pointY = FRAME_RESERVED_HEIGHT / 2;
+
+      this.timeframesArea
+        .scrollIntoView()
+        .trigger('mouseover', pointX, pointY)
+        .click(pointX, pointY, options);
+    });
+  },
+
+  /**
    * Captures a screenshot of an element to compare later
    * @param {string} name name of the screenshot
    */
-  capture(name: string) {
-    return this.drawingArea.captureScreenshot(name);
+  captureCanvas(name: string) {
+    return this.drawingArea.captureScreenshot(name, { withHidden: ['.lsf-video-canvas'] });
   },
 
   /**
@@ -108,7 +134,7 @@ export const ImageView = {
    * @param treshold to compare image. It's a relation between original number of pixels vs changed number of pixels
    */
   canvasShouldChange(name: string, treshold = 0.1) {
-    return this.drawingArea.compareScreenshot(name, 'shouldChange', { treshold });
+    return this.drawingArea.compareScreenshot(name, 'shouldChange', { withHidden: ['.lsf-video-canvas'], treshold });
   },
 
   /**
@@ -118,9 +144,6 @@ export const ImageView = {
    * @param treshold to compare image. It's a relation between original number of pixels vs changed number of pixels
    */
   canvasShouldNotChange(name: string, treshold = 0.1) {
-    return this.drawingArea.compareScreenshot(name, 'shouldNotChange', { treshold });
-  },
-  selectRect3PointToolByHotkey() {
-    cy.get('body').type('{shift}{R}');
+    return this.drawingArea.compareScreenshot(name, 'shouldNotChange', { withHidden: ['.lsf-video-canvas'], treshold });
   },
 };

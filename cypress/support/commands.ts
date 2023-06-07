@@ -1,17 +1,25 @@
+import Loggable = Cypress.Loggable
+import Timeoutable = Cypress.Timeoutable
+import Tresholdable = Cypress.Tresholdable
+import CompareScreenshotOptions = Cypress.CompareScreenshotOptions
+
 const Screenshots = new Map<string, string>();
 
 const getName = (suffix: string) => {
   const spec = Cypress.spec.name;
+
   return `${spec.replace(/.([jt]s)/, '')}-${suffix}`.toLowerCase();
-}
+};
+
 Cypress.Commands.add('captureScreenshot', {
   prevSubject: ['element'],
-}, (subject, name) => {
+}, (subject, name, screenshotCaptureOptions: Partial<Loggable & Timeoutable & CompareScreenshotOptions> = {}) => {
+  const { withHidden = [], ...screenshotOptions } = screenshotCaptureOptions;
   const log = Cypress.log({
     $el: subject,
-    name: "captureScreenshot",
-    displayName: "captureScreenshot",
-    type: "parent",
+    name: 'captureScreenshot',
+    displayName: 'captureScreenshot',
+    type: 'parent',
     autoEnd: false,
   });
 
@@ -24,25 +32,36 @@ Cypress.Commands.add('captureScreenshot', {
   const obj = cy.wrap(subject, { log: false });
 
   obj.scrollIntoView({ log: false });
-  obj.screenshot(screenshotName + '-orig', {
-    onAfterScreenshot(_el, screenshot) {
-      Screenshots.set(screenshotName, screenshot.path);
-    },
-    log: false
-  });
 
+  for (const hiddenSelector of withHidden) {
+    cy.get(hiddenSelector).invoke('css', 'visibility', 'hidden');
+  }
+  obj.screenshot(screenshotName + '-orig', Object.assign(
+    { log: false },
+    screenshotOptions,
+    {
+      onAfterScreenshot(_el, screenshot) {
+        screenshotOptions.onAfterScreenshot?.(_el, screenshot);
+        Screenshots.set(screenshotName, screenshot.path);
+      },
+    },
+  ));
+  for (const hiddenSelector of withHidden) {
+    cy.get(hiddenSelector).invoke('css', 'visibility', '');
+  }
   log.end();
   return obj;
 });
 
 Cypress.Commands.add('compareScreenshot', {
   prevSubject: ['element'],
-}, (subject, name, compare, treshold = 0.1) => {
+}, (subject, name, compare, screenshotCompareOptions: Partial<Loggable & Timeoutable & CompareScreenshotOptions & Tresholdable> = {}) => {
+  const { treshold = 0.1, withHidden = [], ...screenshotOptions } = screenshotCompareOptions;
   const screenshotName = getName(name);
   const log = Cypress.log({
     $el: subject,
-    name: "compareScreenshot",
-    message: "Comparing screenshots",
+    name: 'compareScreenshot',
+    message: 'Comparing screenshots',
     autoEnd: false,
   });
 
@@ -59,23 +78,34 @@ Cypress.Commands.add('compareScreenshot', {
   };
 
   obj.scrollIntoView({ log: false });
-  obj.screenshot(screenshotName + '-comp', {
-    onAfterScreenshot(_el, currentScreenshot) {
-      options.initialScreenshot = Screenshots.get(screenshotName);
-      options.currentScreenshot = currentScreenshot.path;
+  for (const hiddenSelector of withHidden) {
+    cy.get(hiddenSelector).invoke('css', 'visibility', 'hidden');
+  }
+  obj.screenshot(screenshotName + '-comp', Object.assign(
+    { log: false },
+    screenshotOptions,
+    {
+      onAfterScreenshot(_el, currentScreenshot) {
+        screenshotOptions.onAfterScreenshot?.(_el, currentScreenshot);
+        options.initialScreenshot = Screenshots.get(screenshotName);
+        options.currentScreenshot = currentScreenshot.path;
+      },
     },
-    log: false,
-  });
+  ));
+  for (const hiddenSelector of withHidden) {
+    cy.get(hiddenSelector).invoke('css', 'visibility', '');
+  } 
 
   cy
     .task('compareScreenshots', options, { log: false })
     .then((result) => {
       if (!result) {
-        const error = new Error("Change");
+        const error = new Error('Change');
+
         log.error(error);
         throw error;
       }
-        Screenshots.delete(screenshotName);
+      Screenshots.delete(screenshotName);
     });
 
   log.end();

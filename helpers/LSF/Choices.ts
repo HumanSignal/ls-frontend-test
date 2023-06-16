@@ -1,13 +1,19 @@
 import { FF_DEV_2007 } from '../../feature-flags';
 import { LabelStudio } from './LabelStudio';
 
-class CChoices {
+class ChoicesHelper {
   private get _baseRootSelector() {
     return '.lsf-choices';
   }
   private getСhoiceSelector() {
     return LabelStudio.getFeatureFlag(FF_DEV_2007).then(isFFDev2007 => {
       return isFFDev2007 ? '.lsf-choice__item .ant-checkbox + span' : '.ant-checkbox-wrapper';
+    });
+  }
+
+  private getCheckedСhoiceSelector() {
+    return LabelStudio.getFeatureFlag(FF_DEV_2007).then(isFFDev2007 => {
+      return isFFDev2007 ? '.lsf-choice__item .ant-checkbox-checked + span' : '.ant-checkbox-wrapper-checked';
     });
   }
 
@@ -29,9 +35,21 @@ class CChoices {
     return this.getСhoiceSelector()
       .then(choiceSelector => {
         return this.root
-          .find(choiceSelector)
-          .contains(text);
+          .contains(choiceSelector, text);
       });
+  }
+
+  findCheckedChoice(text: string) {
+    return this.getCheckedСhoiceSelector()
+      .then(checkedСhoiceSelector => {
+        return this.root
+          .contains(checkedСhoiceSelector, text);
+      });
+  }
+
+  hasCheckedChoice(text: string) {
+    this.findCheckedChoice(text)
+      .should('be.visible');
   }
 
   toggleSelect() {
@@ -46,9 +64,9 @@ class CChoices {
   }
 }
 
-const Choices = new CChoices('&:eq(0)');
+const Choices = new ChoicesHelper('&:eq(0)');
 const useChoices = (rootSelector: string) => {
-  return new CChoices(rootSelector);
+  return new ChoicesHelper(rootSelector);
 };
 
 export {

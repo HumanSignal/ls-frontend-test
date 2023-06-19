@@ -1,4 +1,4 @@
-class CTaxonomy {
+class TaxonomyHelper {
   private get _baseRootSelector() {
     return '.taxonomy';
   }
@@ -10,6 +10,11 @@ class CTaxonomy {
 
   get root() {
     return cy.get(this._rootSelector);
+  }
+
+  get selected() {
+    return this.root
+      .find('.htx-taxonomy-selected');
   }
 
   get input() {
@@ -26,21 +31,26 @@ class CTaxonomy {
       .contains(text)
       .scrollIntoView();
   }
+  hasSelected(text) {
+    return this.selected
+      .contains('div', text)
+      .should('exist');
+  }
   open() {
     this.input
-      .filter(':not([class=taxonomy_open--])')
+      .filter(':not([class*="taxonomy_open--"])')
       .click();
   }
   close() {
     this.input
-      .filter('[class=taxonomy_open--]')
+      .filter('[class*="taxonomy_open--"]')
       .click();
   }
 }
 
-const Taxonomy = new CTaxonomy('&:eq(0)');
+const Taxonomy = new TaxonomyHelper('&:eq(0)');
 const useTaxonomy = (rootSelector: string) => {
-  return new CTaxonomy(rootSelector);
+  return new TaxonomyHelper(rootSelector);
 };
 
 export {

@@ -21,6 +21,11 @@ export const ImageView = {
       .siblings()
       .get('[class^="image-element--"] .konvajs-content');
   },
+  get toolBar() {
+    cy.log('Get tool bar');
+    return this.root
+      .find('.lsf-toolbar');
+  },
   get pagination() {
     return this.root
       .get('[class^="pagination--"]');
@@ -38,7 +43,7 @@ export const ImageView = {
     this.image
       .should('be.visible')
       .and((img) => {
-        return expect((img[0] as HTMLImageElement).naturalWidth).to.be.greaterThan(0); 
+        return expect((img[0] as HTMLImageElement).naturalWidth).to.be.greaterThan(0);
       });
 
     this.drawingArea
@@ -84,7 +89,7 @@ export const ImageView = {
       .scrollIntoView()
       .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
       .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
-      .trigger('mouseup',  { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+      .trigger('mouseup',  x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
   },
   /**
    * Draws the rectangle on the drawing area with coordinates and size relative to the drawing area.
@@ -134,5 +139,21 @@ export const ImageView = {
   },
   selectRect3PointToolByHotkey() {
     cy.get('body').type('{shift}{R}');
+  },
+
+  selectRectangleToolByButton() {
+    this.toolBar
+      .find('[aria-label="rectangle-tool"]')
+      .should('be.visible')
+      .click()
+      .should('have.class', 'lsf-tool_active');
+  },
+
+  selectMoveToolByButton() {
+    this.toolBar
+      .find('[aria-label="move-tool"]')
+      .should('be.visible')
+      .click()
+      .should('have.class', 'lsf-tool_active');
   },
 };

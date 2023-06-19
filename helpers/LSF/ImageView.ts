@@ -26,6 +26,18 @@ export const ImageView = {
     return this.root
       .find('.lsf-toolbar');
   },
+  get pagination() {
+    return this.root
+      .get('[class^="pagination--"]');
+  },
+  get paginationPrevBtn() {
+    return this.pagination
+      .get('.lsf-pagination__btn_arrow-left:not(.lsf-pagination__btn_arrow-left-double)');
+  },
+  get paginationNextBtn() {
+    return this.pagination
+      .get('.lsf-pagination__btn_arrow-right:not(.lsf-pagination__btn_arrow-right-double)');
+  },
   waitForImage() {
     cy.log('Make sure that the image is visible and loaded');
     this.image

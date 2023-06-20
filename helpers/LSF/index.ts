@@ -12,3 +12,4 @@ export { Rating, useRating } from './Rating';
 export { Textarea, useTextarea } from './Textarea';
 export { Modals } from './Modals';
 export { ToolBar } from './ToolBar';
+export { Relations } from './Relations';

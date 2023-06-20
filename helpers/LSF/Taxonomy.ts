@@ -27,8 +27,7 @@ class TaxonomyHelper {
   }
   findItem(text) {
     return this.dropdown
-      .find('[class^=taxonomy__item]')
-      .contains(text)
+      .contains('[class^=taxonomy__item]', text)
       .scrollIntoView();
   }
   hasSelected(text) {

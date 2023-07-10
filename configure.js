@@ -5,6 +5,7 @@ import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
 import * as tasks from './tasks';
 import { disableChromeGPU } from './plugins/disable_gpu';
 import cypressCoverageTask from '@cypress/code-coverage/task';
+import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
@@ -48,6 +49,9 @@ export default function(configModifier, setupNodeEvents) {
         setupNodeEvents?.(on, config);
         // When running in headless on the CI, there's no GPU acceleration available
         disableChromeGPU(on);
+
+        addMatchImageSnapshotPlugin(on, config);
+
         return config;
       },
     },

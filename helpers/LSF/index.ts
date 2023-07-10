@@ -1,3 +1,4 @@
+export { AudioView } from './AudioView';
 export { ImageView } from './ImageView';
 export { Labels } from './Labels';
 export { LabelStudio } from './LabelStudio';

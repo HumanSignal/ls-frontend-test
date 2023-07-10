@@ -37,6 +37,8 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
+        addMatchImageSnapshotPlugin(on, config);
+
         // Allows collecting coverage
         cypressCoverageTask(on, config);
         on('task', { ...tasks });
@@ -49,8 +51,6 @@ export default function(configModifier, setupNodeEvents) {
         setupNodeEvents?.(on, config);
         // When running in headless on the CI, there's no GPU acceleration available
         disableChromeGPU(on);
-
-        addMatchImageSnapshotPlugin(on, config);
 
         return config;
       },

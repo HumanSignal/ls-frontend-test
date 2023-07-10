@@ -34,9 +34,19 @@ export default function(configModifier, setupNodeEvents) {
       baseUrl: `http://localhost:${LSF_PORT}`,
       specPattern: './specs/**/*.cy.ts',
       viewportWidth: 1600,
-      viewportHeight: 900,
+      viewportHeight: 1200,
       // output config
       setupNodeEvents(on, config) {
+        on('before:browser:launch', (browser, launchOptions) => {
+          if (browser.name === 'chrome' && browser.isHeadless) {
+            launchOptions.args.push('--window-size=1600,1200')
+            // force screen to be non-retina (1600x1200 size)
+            launchOptions.args.push('--force-device-scale-factor=1')
+          }
+
+          return launchOptions
+        })
+
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage

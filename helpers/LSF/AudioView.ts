@@ -99,11 +99,11 @@ export const AudioView = {
   /**
   * Matches the visual appearance of the entire AudioView component
   */
-  toMatchImageSnapshot(el?: Cypress.Chainable<JQuery<HTMLElement>>) {
+  toMatchImageSnapshot(el?: Cypress.Chainable<JQuery<HTMLElement>>, options?: { threshold?: number }) {
     el = el || this.root;
     el
       .wait(0)
-      .matchImageSnapshot();
+      .matchImageSnapshot(options);
   },
 };
 

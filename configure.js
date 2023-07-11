@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress';
 import path from 'path';
+import lockfile from 'proper-lockfile';
 import { setupTypescript } from './plugins/typescript';
 import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
 import * as tasks from './tasks';
@@ -38,16 +39,55 @@ export default function(configModifier, setupNodeEvents) {
       // output config
       setupNodeEvents(on, config) {
         on('before:browser:launch', (browser = null, launchOptions) => {
-            if (browser.name === 'chrome') {
-                launchOptions.args.push('--force-color-profile=srgb');
-                return launchOptions;
-            }
+          if (browser.name === 'chrome') {
+            // Force sRGB color profile to prevent color mismatch in CI vs local runs
+            launchOptions.args.push('--force-color-profile=srgb');
+            return launchOptions;
+          }
         });
+
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage
-        cypressCoverageTask(on, config);
-        on('task', { ...tasks });
+        cypressCoverageTask((_, tasks) => {
+          // Have to lock the files to prevent errors from occurring when running in parallel
+          // @source https://github.com/tnicola/cypress-parallel/issues/126#issuecomment-1258377888
+          const parallelTasks = {
+            ...tasks,
+            combineCoverage: async (sentCoverage) => {
+              const release = await lockfile.lock('/tmp/cypressCombineCoverage.lock', {
+                realpath: false, // allows following symlinks and creating the file
+                retries: {
+                  retries: 10,
+                  factor: 2,
+                  minTimeout: 100,
+                  maxTimeout: 1000,
+                  randomize: true,
+                },
+              });
+              const ret = await tasks.combineCoverage(sentCoverage);
+              await release();
+              return ret;
+            },
+            coverageReport: async () => {
+              const release = await lockfile.lock('/tmp/cypressCoverageReport.lock', {
+                realpath: false, // allows following symlinks and creating the file
+                retries: {
+                  retries: 10,
+                  factor: 2,
+                  minTimeout: 100,
+                  maxTimeout: 1000,
+                  randomize: true,
+                },
+              });
+              const ret = await tasks.coverageReport();
+              await release();
+              return ret;
+            },
+          };
+          on('task', parallelTasks);
+        }, config)
+
         // Gives a step-by-step output for failed tests in headless mode
         installLogsPrinter(on, {
           outputVerbose: false

@@ -1,14 +1,14 @@
-import { defineConfig } from 'cypress';
-import path from 'path';
-import lockfile from 'proper-lockfile';
-import { setupTypescript } from './plugins/typescript';
+import { defineConfig } from "cypress";
+import path from "path";
+import lockfile from "proper-lockfile";
+import { setupTypescript } from "./plugins/typescript";
 import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
-import * as tasks from './tasks';
-import { disableChromeGPU } from './plugins/disable_gpu';
-import cypressCoverageTask from '@cypress/code-coverage/task';
-import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
+import * as customTasks from "./tasks";
+import { disableChromeGPU } from "./plugins/disable_gpu";
+import cypressCoverageTask from "@cypress/code-coverage/task";
+import { addMatchImageSnapshotPlugin } from "cypress-image-snapshot/plugin";
 
-const LSF_PORT = process.env.LSF_PORT ?? '3000';
+const LSF_PORT = process.env.LSF_PORT ?? "3000";
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
 const localPath = p => path.resolve(process.cwd(), p);
 
@@ -49,12 +49,12 @@ export default function(configModifier, setupNodeEvents) {
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage
-        cypressCoverageTask((_, _tasks) => {
+        cypressCoverageTask((_, tasks) => {
           // Have to lock the files to prevent errors from occurring when running in parallel
           // @source https://github.com/tnicola/cypress-parallel/issues/126#issuecomment-1258377888
           const parallelTasks = {
-            ..._tasks,
             ...tasks,
+            ...customTasks,
             combineCoverage: async (sentCoverage) => {
               const release = await lockfile.lock('/tmp/cypressCombineCoverage.lock', {
                 realpath: false, // allows following symlinks and creating the file

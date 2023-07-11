@@ -37,6 +37,12 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
+        on('before:browser:launch', (browser = null, launchOptions) => {
+            if (browser.name === 'chrome') {
+                launchOptions.args.push('--force-color-profile=srgb');
+                return launchOptions;
+            }
+        });
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage

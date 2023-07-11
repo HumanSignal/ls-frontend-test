@@ -37,16 +37,6 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
-        on('before:browser:launch', (browser, launchOptions) => {
-          if (browser.name === 'chrome' && browser.isHeadless) {
-            launchOptions.args.push('--window-size=1400,900')
-            // force screen to be non-retina (1600x1200 size)
-            launchOptions.args.push('--force-device-scale-factor=1')
-          }
-
-          return launchOptions
-        })
-
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage

@@ -49,10 +49,11 @@ export default function(configModifier, setupNodeEvents) {
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage
-        cypressCoverageTask((_, tasks) => {
+        cypressCoverageTask((_, _tasks) => {
           // Have to lock the files to prevent errors from occurring when running in parallel
           // @source https://github.com/tnicola/cypress-parallel/issues/126#issuecomment-1258377888
           const parallelTasks = {
+            ..._tasks,
             ...tasks,
             combineCoverage: async (sentCoverage) => {
               const release = await lockfile.lock('/tmp/cypressCombineCoverage.lock', {

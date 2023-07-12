@@ -1,14 +1,13 @@
-import { defineConfig } from "cypress";
-import path from "path";
-import lockfile from "proper-lockfile";
-import { setupTypescript } from "./plugins/typescript";
-import installLogsPrinter from "cypress-terminal-report/src/installLogsPrinter";
-import * as customTasks from "./tasks";
-import { disableChromeGPU } from "./plugins/disable_gpu";
-import cypressCoverageTask from "@cypress/code-coverage/task";
-import { addMatchImageSnapshotPlugin } from "cypress-image-snapshot/plugin";
+import { defineConfig } from 'cypress';
+import path from 'path';
+import { setupTypescript } from './plugins/typescript';
+import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter';
+import * as tasks from './tasks';
+import { disableChromeGPU } from './plugins/disable_gpu';
+import { coverageParallel } from './plugins/coverage_parallel.js';
+import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
 
-const LSF_PORT = process.env.LSF_PORT ?? "3000";
+const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
 const localPath = p => path.resolve(process.cwd(), p);
 
@@ -49,56 +48,17 @@ export default function(configModifier, setupNodeEvents) {
         addMatchImageSnapshotPlugin(on, config);
 
         // Allows collecting coverage
-        cypressCoverageTask((_, tasks) => {
-          // Have to lock the files to prevent errors from occurring when running in parallel
-          // @source https://github.com/tnicola/cypress-parallel/issues/126#issuecomment-1258377888
-          const parallelTasks = {
-            ...tasks,
-            ...customTasks,
-            combineCoverage: async (sentCoverage) => {
-              const release = await lockfile.lock('/tmp/cypressCombineCoverage.lock', {
-                realpath: false, // allows following symlinks and creating the file
-                retries: {
-                  retries: 10,
-                  factor: 2,
-                  minTimeout: 100,
-                  maxTimeout: 1000,
-                  randomize: true,
-                },
-              });
-              const ret = await tasks.combineCoverage(sentCoverage);
-              await release();
-              return ret;
-            },
-            coverageReport: async () => {
-              const release = await lockfile.lock('/tmp/cypressCoverageReport.lock', {
-                realpath: false, // allows following symlinks and creating the file
-                retries: {
-                  retries: 10,
-                  factor: 2,
-                  minTimeout: 100,
-                  maxTimeout: 1000,
-                  randomize: true,
-                },
-              });
-              const ret = await tasks.coverageReport();
-              await release();
-              return ret;
-            },
-          };
-          on('task', parallelTasks);
-        }, config)
-
+        coverageParallel(on, config);
+        on('task', { ...tasks });
         // Gives a step-by-step output for failed tests in headless mode
         installLogsPrinter(on, {
-          outputVerbose: false
+          outputVerbose: false,
         });
         // Allows compiling TS files from node_modules (this package)
         setupTypescript(on, config);
         setupNodeEvents?.(on, config);
         // When running in headless on the CI, there's no GPU acceleration available
         disableChromeGPU(on);
-
         return config;
       },
     },

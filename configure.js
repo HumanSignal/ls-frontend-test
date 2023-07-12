@@ -5,6 +5,7 @@ import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter';
 import * as tasks from './tasks';
 import { disableChromeGPU } from './plugins/disable_gpu';
 import { coverageParallel } from './plugins/coverage_parallel.js';
+import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
@@ -36,6 +37,16 @@ export default function(configModifier, setupNodeEvents) {
       viewportHeight: 900,
       // output config
       setupNodeEvents(on, config) {
+        on('before:browser:launch', (browser = null, launchOptions) => {
+          if (browser.name === 'chrome') {
+            // Force sRGB color profile to prevent color mismatch in CI vs local runs
+            launchOptions.args.push('--force-color-profile=srgb');
+            return launchOptions;
+          }
+        });
+
+        addMatchImageSnapshotPlugin(on, config);
+
         // Allows collecting coverage
         coverageParallel(on, config);
         on('task', { ...tasks });

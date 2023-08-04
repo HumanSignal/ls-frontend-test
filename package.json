@@ -14,7 +14,8 @@
   "files": [
     "./cypress/**/*",
     "./types/**/*",
-    "./helpers/**/*"
+    "./helpers/**/*",
+    "./plugins/**/*"
   ],
   "bin": {
     "lstest": "./bin/cli.js"

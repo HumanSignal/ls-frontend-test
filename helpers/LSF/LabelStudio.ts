@@ -109,6 +109,23 @@ class LSParamsBuilder {
     }
     return this;
   }
+
+  eventListeners(eventListeners) {
+    this.params.eventListeners = eventListeners;
+    return this;
+  }
+
+  withEventListener(eventName, listener) {
+    if (!this.params.eventListeners) this.params.eventListeners = {};
+    this.params.eventListeners[eventName] = listener;
+    return this;
+  }
+
+  withParam(paramName, paramValue) {
+    this.params[paramName] = paramValue;
+    return this;
+  }
+
 }
 
 export const LabelStudio = {
@@ -154,7 +171,13 @@ export const LabelStudio = {
       .visit('/')
       .then(win => {
         cy.log(`Default feature flags set ${JSON.stringify(win.APP_SETTINGS.feature_flags, null, '  ')}`);
-        new win.LabelStudio('label-studio', win.LSF_CONFIG);
+        const labelStudio = new win.LabelStudio('label-studio', win.LSF_CONFIG);
+
+        if (win.LSF_CONFIG.eventListeners) {
+          for (const [event, listener] of Object.entries(win.LSF_CONFIG.eventListeners)) {
+            labelStudio.on(event, listener);
+          }
+        }
         expect(win.LabelStudio.instances.size).to.be.equal(1);
         cy.get('.lsf-editor').should('be.visible');
         cy.log('Label Studio initialized');

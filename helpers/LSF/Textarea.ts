@@ -5,7 +5,7 @@ class TextareaHelper {
     return '.lsf-text-area';
   }
 
-  private _rootSelector: string
+  private _rootSelector: string;
 
   constructor(rootSelector) {
     this._rootSelector = rootSelector.replace(/^\&/, this._baseRootSelector);
@@ -25,8 +25,24 @@ class TextareaHelper {
       .find('[class^="row--"]');
   }
 
+  row(idx: number) {
+    return this.rows.eq(idx - 1);
+  }
+
   type(text: string) {
     return this.input.type(text);
+  }
+
+  clickRowEdit(idx: number) {
+    this.row(idx).find('[aria-label="Edit Region"]').click();
+  }
+
+  rowInput(idx: number) {
+    return this.row(idx).find('.ant-input');
+  }
+
+  rowType(idx: number, text: string) {
+    return this.rowInput(idx).type(text);
   }
 
   hasValue(text: string) {

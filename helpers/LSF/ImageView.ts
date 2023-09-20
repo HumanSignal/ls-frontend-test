@@ -156,4 +156,18 @@ export const ImageView = {
       .click()
       .should('have.class', 'lsf-tool_active');
   },
+
+  rotateLeft() {
+    this.toolBar
+      .find('[aria-label="rotate-left"]')
+      .should('be.visible')
+      .click();
+  },
+
+  rotateRight() {
+    this.toolBar
+      .find('[aria-label="rotate-right"]')
+      .should('be.visible')
+      .click();
+  }
 };

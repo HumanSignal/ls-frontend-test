@@ -53,6 +53,9 @@ export const Sidebar = {
   hasSelectedRegions(value: number) {
     this.regions.filter('.lsf-tree-node-selected').should('have.length', value);
   },
+  hasSelectedRegion(idx: number) {
+    this.findRegionByIndex(idx).should('have.class', 'lsf-tree-node-selected');
+  },
   hasHiddenRegion(value: number) {
     this.hiddenRegions.should('have.length', value);
   },

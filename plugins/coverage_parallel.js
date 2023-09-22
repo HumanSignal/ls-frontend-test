@@ -28,8 +28,11 @@ async function beginSyncedPart(key) {
 }
 
 export const coverageParallel = (on, config) => {
-  fs.rmSync(LOCK_PATH, { recursive: true, force: true });
-  fs.mkdirSync(LOCK_PATH);
+  try {
+    fs.rmSync(LOCK_PATH, { recursive: true, force: true });
+    fs.mkdirSync(LOCK_PATH);
+  } catch (err) { console.log(err); }
+
   cypressCoverageTask((_, tasks) => {
     // we use our own locking here to prevent a race condition with cypress-coverage and
     // cypress-parallel

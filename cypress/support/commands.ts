@@ -2,6 +2,12 @@ import Loggable = Cypress.Loggable
 import Timeoutable = Cypress.Timeoutable
 import Tresholdable = Cypress.Tresholdable
 import CompareScreenshotOptions = Cypress.CompareScreenshotOptions
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+
+addMatchImageSnapshotCommand({
+  failureThreshold: 0.1,
+  failureThresholdType: 'percent',
+});
 
 const Screenshots = new Map<string, string>();
 

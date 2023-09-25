@@ -59,6 +59,11 @@ class TaxonomyHelper {
       .contains('div', text)
       .should('exist');
   }
+  hasNoSelected(text) {
+    return this.selected
+      .contains('div', text)
+      .should('not.exist');
+  }
   open() {
     this.input
       .filter(this.selectors.closed)

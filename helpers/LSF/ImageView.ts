@@ -140,6 +140,12 @@ export const ImageView = {
   selectRect3PointToolByHotkey() {
     cy.get('body').type('{shift}{R}');
   },
+  zoomInWithHotkey() {
+    cy.get('body').type(`{ctrl}{+}`);
+  },
+  zoomOutWithHotkey() {
+    cy.get('body').type(`{ctrl}{-}`);
+  },
 
   selectRectangleToolByButton() {
     this.toolBar

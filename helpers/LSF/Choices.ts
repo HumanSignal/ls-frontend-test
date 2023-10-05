@@ -6,15 +6,11 @@ class ChoicesHelper {
     return '.lsf-choices';
   }
   private getСhoiceSelector() {
-    return LabelStudio.getFeatureFlag(FF_DEV_2007).then(isFFDev2007 => {
-      return isFFDev2007 ? '.lsf-choice__item .ant-checkbox + span' : '.ant-checkbox-wrapper';
-    });
+    return '.lsf-choice__item .ant-checkbox + span';
   }
 
   private getCheckedСhoiceSelector() {
-    return LabelStudio.getFeatureFlag(FF_DEV_2007).then(isFFDev2007 => {
-      return isFFDev2007 ? '.lsf-choice__item .ant-checkbox-checked + span' : '.ant-checkbox-wrapper-checked';
-    });
+    return '.lsf-choice__item .ant-checkbox-checked + span';
   }
 
   private _rootSelector: string
@@ -32,19 +28,11 @@ class ChoicesHelper {
   }
 
   findChoice(text: string) {
-    return this.getСhoiceSelector()
-      .then(choiceSelector => {
-        return this.root
-          .contains(choiceSelector, text);
-      });
+    return this.root.contains(this.getСhoiceSelector(), text);
   }
 
   findCheckedChoice(text: string) {
-    return this.getCheckedСhoiceSelector()
-      .then(checkedСhoiceSelector => {
-        return this.root
-          .contains(checkedСhoiceSelector, text);
-      });
+    return this.root.contains(this.getCheckedСhoiceSelector(), text);
   }
 
   hasCheckedChoice(text: string) {

@@ -89,7 +89,7 @@ export const ImageView = {
       .scrollIntoView()
       .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
       .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
-      .trigger('mouseup',  x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+      .trigger('mouseup', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
   },
   /**
    * Draws the rectangle on the drawing area with coordinates and size relative to the drawing area.
@@ -140,11 +140,14 @@ export const ImageView = {
   selectRect3PointToolByHotkey() {
     cy.get('body').type('{shift}{R}');
   },
+  selectSmartToolByHotkey() {
+    cy.get('body').type('{M}');
+  },
   zoomInWithHotkey() {
-    cy.get('body').type(`{ctrl}{+}`);
+    cy.get('body').type('{ctrl}{+}');
   },
   zoomOutWithHotkey() {
-    cy.get('body').type(`{ctrl}{-}`);
+    cy.get('body').type('{ctrl}{-}');
   },
 
   selectRectangleToolByButton() {

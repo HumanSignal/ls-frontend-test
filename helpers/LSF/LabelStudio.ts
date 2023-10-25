@@ -204,10 +204,10 @@ export const LabelStudio = {
    * It uses inner logic of LabelStudio's object tag models
    */
   waitForObjectsReady() {
-    cy.window().then(win => {
+    cy.window().then({ timeout: 90000 }, win => {
       return new Promise(resolve => {
         const watchObjectsReady = () => {
-          const isReady = win.Htx.annotationStore.selected.objects.every(object => object.isReady);
+          const isReady = win.Htx?.annotationStore?.selected?.objects?.every(object => object.isReady);
 
           if (isReady) {
             resolve(true);
@@ -298,5 +298,64 @@ export const LabelStudio = {
 
         return flagValue;
       });
+  },
+
+  removeAllRegions() {
+    cy.get('body').type('{ctrl}{backspace}');
+  },
+
+
+  get autoAcceptSuggestionsToggle() {
+    return cy.get('.lsf-dynamic-preannotations-control')
+      .contains('label', 'Auto accept annotation suggestions');
+  },
+  get autoAnnotationToggle() {
+    return cy.get('.lsf-dynamic-preannotations');
+  },
+  hasAutoAnnotationToggle() {
+    this.autoAnnotationToggle
+      .should('be.visible');
+  },
+  hasNoAutoAnnotationToggle() {
+    this.autoAnnotationToggle
+      .should('not.exist');
+  },
+  toggleAutoAnnotation() {
+    this.autoAnnotationToggle
+      .find('input')
+      .click();
+  },
+  hasAutoAnnotationToggleChecked() {
+    this.autoAnnotationToggle
+      .find('input')
+      .should('be.checked');
+  },
+  hasAutoAnnotationToggleUnchecked() {
+    this.autoAnnotationToggle
+      .find('input')
+      .should('not.be.checked');
+  },
+  hasAutoAcceptSuggestionsToggle() {
+    this.autoAcceptSuggestionsToggle
+      .should('be.visible');
+  },
+  hasNoAutoAcceptSuggestionsToggle() {
+    cy.get('.lsf-dynamic-preannotations-control')
+      .should('not.exist');
+  },
+  toggleAutoAcceptSuggestions() {
+    this.autoAcceptSuggestionsToggle
+      .find('input')
+      .click();
+  },
+  hasAutoAcceptSuggestionsToggleChecked() {
+    this.autoAcceptSuggestionsToggle
+      .find('input')
+      .should('be.checked');
+  },
+  hasAutoAcceptSuggestionsToggleUnchecked() {
+    this.autoAcceptSuggestionsToggle
+      .find('input')
+      .should('not.be.checked');
   },
 };

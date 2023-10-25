@@ -51,14 +51,18 @@ class TaxonomyHelper {
   }
   findItem(text) {
     return this.dropdown
-      .find(this.selectors.item)
-      .contains(text)
+      .contains(this.selectors.item, text)
       .scrollIntoView();
   }
   hasSelected(text) {
     return this.selected
       .contains('div', text)
       .should('exist');
+  }
+  hasNoSelected(text) {
+    return this.selected
+      .contains('div', text)
+      .should('not.exist');
   }
   open() {
     this.input

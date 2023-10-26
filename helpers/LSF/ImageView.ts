@@ -14,10 +14,13 @@ export const ImageView = {
     return this.image
       .closest('.lsf-object');
   },
+  get drawingFrame() {
+    return this.image
+      .closest('[class^="frame--"]');
+  },
   get drawingArea() {
     cy.log('Get Konva.js root');
-    return this.image
-      .closest('[class^="frame--"]')
+    return this.drawingFrame
       .siblings()
       .get('[class^="image-element--"] .konvajs-content');
   },
@@ -67,7 +70,7 @@ export const ImageView = {
    * @param {number} y
    */
   clickAtRelative(x: number, y: number, options?: Partial<ClickOptions>) {
-    this.drawingArea.then(el => {
+    this.drawingFrame.then(el => {
       const bbox: DOMRect = el[0].getBoundingClientRect();
       const realX = x * bbox.width;
       const realY = y * bbox.height;
@@ -89,7 +92,7 @@ export const ImageView = {
       .scrollIntoView()
       .trigger('mousedown', x, y, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
       .trigger('mousemove', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options })
-      .trigger('mouseup',  x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+      .trigger('mouseup', x + width, y + height, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
   },
   /**
    * Draws the rectangle on the drawing area with coordinates and size relative to the drawing area.
@@ -100,7 +103,7 @@ export const ImageView = {
    * @param {number} height
    */
   drawRectRelative(x: number, y: number, width: number, height: number, options: MouseInteractionOptions = {}) {
-    this.drawingArea.then(el => {
+    this.drawingFrame.then(el => {
       const bbox: DOMRect = el[0].getBoundingClientRect();
       const realX = x * bbox.width;
       const realY = y * bbox.height;
@@ -141,10 +144,10 @@ export const ImageView = {
     cy.get('body').type('{shift}{R}');
   },
   zoomInWithHotkey() {
-    cy.get('body').type(`{ctrl}{+}`);
+    cy.get('body').type('{ctrl}{+}');
   },
   zoomOutWithHotkey() {
-    cy.get('body').type(`{ctrl}{-}`);
+    cy.get('body').type('{ctrl}{-}');
   },
 
   selectRectangleToolByButton() {
@@ -175,5 +178,5 @@ export const ImageView = {
       .find('[aria-label="rotate-right"]')
       .should('be.visible')
       .click();
-  }
+  },
 };

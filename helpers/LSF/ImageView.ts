@@ -78,6 +78,15 @@ export const ImageView = {
       this.clickAt(realX, realY, options);
     });
   },
+  clickAtStageRelative(x: number, y: number, options?: Partial<ClickOptions>) {
+    this.drawingArea.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+      const realX = x * bbox.width;
+      const realY = y * bbox.height;
+
+      this.clickAt(realX, realY, options);
+    });
+  },
   /**
    * Draws a rectangle on the drawing area.
    * It also could be used for some drag and drop interactions for example selecting area or moving existing regions.

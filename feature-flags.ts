@@ -45,26 +45,14 @@ export const FF_DEV_1621 = 'ff_front_dev_1621_interactive_mode_150222_short';
 // New Audio 2.0 UI
 export const FF_DEV_1713 = 'ff_front_DEV_1713_audio_ui_150222_short';
 
-// Rework of Choices tag
-export const FF_DEV_2007 = 'ff_dev_2007_rework_choices_280322_short';
-
-// Add ability to generate children tags from task data
-export const FF_DEV_2007_DEV_2008 = 'ff_dev_2007_dev_2008_dynamic_tag_children_250322_short';
-
 // Clean unnecessary classification areas after deserialization
 export const FF_DEV_2100 = 'ff_dev_2100_clean_unnecessary_areas_140422_short';
-
-// Fix preselected choices
-export const FF_DEV_2100_A = 'ff_dev_2100_preselected_choices_250422_short';
 
 // Allow to use html inside <Label/> tags
 export const FF_DEV_2128 = 'ff_dev_2128_html_in_labels_150422_short';
 
 // 3-point Rectangle tool to created rotated bboxes conveniently
 export const FF_DEV_2132 = 'ff_front_dev_2132_rotating_bounding_box';
-
-// Make nested choices work according to the DES-107
-export const FF_DEV_2244 = 'ff_front_dev_2244_nested_choices_des_107_160522_short';
 
 // Show draft as the topmost item in annotation history
 export const FF_DEV_2290 = 'ff_front_dev_2290_draft_in_annotation_history_short';

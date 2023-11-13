@@ -64,6 +64,29 @@ export const ImageView = {
       .scrollIntoView()
       .click(x, y, options);
   },
+
+  /**
+   * Moves cursor to the coordinates at the drawing area
+   * @param x
+   * @param y
+   * @param options
+   */
+  moveMouse(x: number, y: number, options?: Partial<ClickOptions>) {
+    this.drawingArea
+      .scrollIntoView()
+      .trigger('mouseenter', x, y, { eventConstructor: 'MouseEvent', ...options })
+      .trigger('mousemove', x, y, { eventConstructor: 'MouseEvent', ...options });
+  },
+
+  moveMouseToRelative(x: number, y: number, options?: Partial<ClickOptions>) {
+    this.drawingArea.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+      const realX = x * bbox.width;
+      const realY = y * bbox.height;
+
+      this.moveMouse(realX, realY, options);
+    });
+  },
   /**
    * Clicks at the relative coordinates on the drawing area
    * @param {number} x

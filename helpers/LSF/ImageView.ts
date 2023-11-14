@@ -87,6 +87,35 @@ export const ImageView = {
       this.clickAt(realX, realY, options);
     });
   },
+
+  /**
+   * Moves cursor to the coordinates at the drawing area
+   * @param x
+   * @param y
+   * @param options
+   */
+  moveMouse(x: number, y: number, options?: Partial<ClickOptions>) {
+    this.drawingArea
+      .scrollIntoView()
+      .trigger('mouseenter', x, y, { eventConstructor: 'MouseEvent', ...options })
+      .trigger('mousemove', x, y, { eventConstructor: 'MouseEvent', ...options });
+  },
+
+  /**
+   * Moves cursor to the relative coordinates at the drawing area
+   * @param x value in the range [0, 1]
+   * @param y value in the range [0, 1]
+   * @param options
+   */
+  moveMouseToRelative(x: number, y: number, options?: Partial<ClickOptions>) {
+    this.drawingArea.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+      const realX = x * bbox.width;
+      const realY = y * bbox.height;
+
+      this.moveMouse(realX, realY, options);
+    });
+  },
   /**
    * Draws a rectangle on the drawing area.
    * It also could be used for some drag and drop interactions for example selecting area or moving existing regions.

@@ -14,10 +14,13 @@ export const ImageView = {
     return this.image
       .closest('.lsf-object');
   },
+  get drawingFrame() {
+    return this.image
+      .closest('[class^="frame--"]');
+  },
   get drawingArea() {
     cy.log('Get Konva.js root');
-    return this.image
-      .closest('[class^="frame--"]')
+    return this.drawingFrame
       .siblings()
       .get('[class^="image-element--"] .konvajs-content');
   },
@@ -67,6 +70,15 @@ export const ImageView = {
    * @param {number} y
    */
   clickAtRelative(x: number, y: number, options?: Partial<ClickOptions>) {
+    this.drawingFrame.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+      const realX = x * bbox.width;
+      const realY = y * bbox.height;
+
+      this.clickAt(realX, realY, options);
+    });
+  },
+  clickAtStageRelative(x: number, y: number, options?: Partial<ClickOptions>) {
     this.drawingArea.then(el => {
       const bbox: DOMRect = el[0].getBoundingClientRect();
       const realX = x * bbox.width;
@@ -100,7 +112,7 @@ export const ImageView = {
    * @param {number} height
    */
   drawRectRelative(x: number, y: number, width: number, height: number, options: MouseInteractionOptions = {}) {
-    this.drawingArea.then(el => {
+    this.drawingFrame.then(el => {
       const bbox: DOMRect = el[0].getBoundingClientRect();
       const realX = x * bbox.width;
       const realY = y * bbox.height;
@@ -164,5 +176,19 @@ export const ImageView = {
       .should('be.visible')
       .click()
       .should('have.class', 'lsf-tool_active');
+  },
+
+  rotateLeft() {
+    this.toolBar
+      .find('[aria-label="rotate-left"]')
+      .should('be.visible')
+      .click();
+  },
+
+  rotateRight() {
+    this.toolBar
+      .find('[aria-label="rotate-right"]')
+      .should('be.visible')
+      .click();
   },
 };

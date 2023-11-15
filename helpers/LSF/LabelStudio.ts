@@ -204,10 +204,10 @@ export const LabelStudio = {
    * It uses inner logic of LabelStudio's object tag models
    */
   waitForObjectsReady() {
-    cy.window().then(win => {
+    cy.window().then({ timeout: 90000,  }, win => {
       return new Promise(resolve => {
         const watchObjectsReady = () => {
-          const isReady = win.Htx.annotationStore.selected.objects.every(object => object.isReady);
+          const isReady = win.Htx?.annotationStore?.selected?.objects?.every(object => object.isReady);
 
           if (isReady) {
             resolve(true);

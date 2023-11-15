@@ -12,7 +12,7 @@ class ChoicesHelper {
     return '.lsf-choice__item .ant-checkbox-checked + span';
   }
 
-  private _rootSelector: string
+  private _rootSelector: string;
   constructor(rootSelector) {
     this._rootSelector = rootSelector.replace(/^\&/, this._baseRootSelector);
   }
@@ -36,6 +36,7 @@ class ChoicesHelper {
 
   hasCheckedChoice(text: string) {
     this.findCheckedChoice(text)
+      .scrollIntoView()
       .should('be.visible');
   }
 

@@ -181,6 +181,9 @@ export const ImageView = {
   selectRect3PointToolByHotkey() {
     cy.get('body').type('{shift}{R}');
   },
+  selectSmartToolByHotkey() {
+    cy.get('body').type('{M}');
+  },
   zoomInWithHotkey() {
     cy.get('body').type('{ctrl}{+}');
   },

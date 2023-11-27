@@ -151,6 +151,35 @@ export const ImageView = {
       this.drawRect(realX, realY, realWidth, realHeight, options);
     });
   },
+
+  drawPolyline(points: number[][], options: MouseInteractionOptions = {}) {
+    const [[startX, startY], ...rest] = points;
+    const [endX, endY] = points[points.length - 1];
+
+    this.drawingArea
+      .scrollIntoView()
+      .trigger('mousedown', startX, startY, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+
+    for (const [x, y] of rest) {
+      this.drawingArea
+        .trigger('mousemove', x, y, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+    }
+
+    if (options.beforeMouseup) {
+      options.beforeMouseup();
+    }
+
+    this.drawingArea.trigger('mouseup', endX, endY, { eventConstructor: 'MouseEvent', buttons: 1, ...options });
+  },
+
+  drawPolylineRelative(points: number[][], options: MouseInteractionOptions = {}) {
+    this.drawingFrame.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+      const realPoints = points.map(([x, y]) => [x * bbox.width, y * bbox.height]);
+
+      this.drawPolyline(realPoints, options);
+    });
+  },
   /**
    * Captures a screenshot of an element to compare later
    * @param {string} name name of the screenshot
@@ -178,6 +207,7 @@ export const ImageView = {
   canvasShouldNotChange(name: string, treshold = 0.1) {
     return this.drawingArea.compareScreenshot(name, 'shouldNotChange', { treshold });
   },
+
   selectRect3PointToolByHotkey() {
     cy.get('body').type('{shift}{R}');
   },
@@ -202,6 +232,14 @@ export const ImageView = {
   selectMoveToolByButton() {
     this.toolBar
       .find('[aria-label="move-tool"]')
+      .should('be.visible')
+      .click()
+      .should('have.class', 'lsf-tool_active');
+  },
+
+  selectEraserToolByButton() {
+    this.toolBar
+      .find('[aria-label="eraser"]')
       .should('be.visible')
       .click()
       .should('have.class', 'lsf-tool_active');

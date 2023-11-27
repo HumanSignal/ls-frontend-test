@@ -180,6 +180,27 @@ export const ImageView = {
       this.drawPolyline(realPoints, options);
     });
   },
+
+  getPixel(x: number, y: number) {
+    cy.log(`Pixel at (${x}, ${y})`);
+    return this.drawingArea
+      .scrollIntoView()
+      .getPixel(x, y);
+  },
+  getPixelRelative(x: number, y: number) {
+    return this.drawingFrame.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+
+      return this.getPixel(x * bbox.width, y * bbox.height);
+    });
+  },
+  pixelShouldBe(x: number, y: number, color: string) {
+    cy.log(`Pixel at (${x}, ${y}) should be ${color}`);
+    this.getPixel(x, y).should('equal', color);
+  },
+  pixelRelativeShouldBe(x: number, y: number, color: string) {
+    this.getPixelRelative(x, y).should('equal', color);
+  },
   /**
    * Captures a screenshot of an element to compare later
    * @param {string} name name of the screenshot

@@ -13,6 +13,7 @@ declare namespace Cypress {
     captureScreenshot(name: string, screenshotCaptureOptions?: Partial<Loggable & Timeoutable & CompareScreenshotOptions>): Chainable<JQuery<Element>>;
     compareScreenshot(name: string, assert: 'shouldChange' | 'shouldNotChange' | 'diff', screenshotCompareOptions?: Partial<Loggable & Timeoutable & CompareScreenshotOptions & Tresholdable>): Chainable<JQuery<Element>>;
     matchImageSnapshot(options?: { name?: string, threshold?: number }): Chainable<JQuery<Element>>;
+    getPixel(x: number, y: number): Chainable<string>;
   }
 }
 

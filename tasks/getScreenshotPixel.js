@@ -14,6 +14,5 @@ export const getScreenshotPixel = async ({ screenshot, x, y }) => {
   const k = (x + y * width) << 2;
   const res = [data[k], data[k + 1], data[k + 2]];
 
-  console.log('!> res', res);
   return `#${res.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 };

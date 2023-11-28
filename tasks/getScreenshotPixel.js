@@ -6,7 +6,8 @@ export const getScreenshotPixel = async ({ screenshot, x, y }) => {
     screenshot,
   ]);
 
-  fs.unlinkSync(screenshot);
+  // Temporary removing this in debugging purposes
+  // fs.unlinkSync(screenshot);
 
   const img = file.file;
   const { width, data } = img;

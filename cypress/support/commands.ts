@@ -117,3 +117,47 @@ Cypress.Commands.add('compareScreenshot', {
   log.end();
   return obj;
 });
+
+Cypress.Commands.add('getPixel', {
+  prevSubject: ['element'],
+}, (subject, x, y, withHidden = []) => {
+  const screenshotName = `${Date.now()}-${Math.floor(Math.random() * 1000)}-tmp`;
+  const log = Cypress.log({
+    $el: subject,
+    name: 'getPixel',
+    message: 'Get pixel color',
+    autoEnd: false,
+  });
+
+  const obj = cy.wrap(subject.get(0), { log: false });
+
+  obj.scrollIntoView({ log: false });
+  for (const hiddenSelector of withHidden) {
+    cy.get(hiddenSelector).invoke('css', 'visibility', 'hidden');
+  }
+
+  const options = {
+    screenshot: '',
+    x: Math.round(x),
+    y: Math.round(y),
+  };
+
+  obj.screenshot(screenshotName, Object.assign(
+    { log: false },
+    {
+      onAfterScreenshot(_el, currentScreenshot) {
+        options.screenshot = currentScreenshot.path;
+      },
+    },
+  ));
+  for (const hiddenSelector of withHidden) {
+    cy.get(hiddenSelector).invoke('css', 'visibility', '');
+  }
+
+  return cy
+    .task('getScreenshotPixel', options, { log: false })
+    .then((result) => {
+      log.end();
+      return result.data;
+    });
+});

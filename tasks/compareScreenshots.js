@@ -1,6 +1,7 @@
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import fs from 'fs';
+import { loadPngs } from './utils/png.js';
 
 const readFile = (path) => {
   return new Promise((resolve) => {
@@ -12,17 +13,10 @@ const readFile = (path) => {
 };
 
 const runComparison = async (options) => {
-  const files = await Promise.all([
-    readFile(options.initialScreenshot),
-    readFile(options.currentScreenshot),
-  ]).then((files) => {
-    return files.map(f => {
-      return {
-        ...f,
-        file: PNG.sync.read(f.file),
-      };
-    });
-  });
+  const files = await loadPngs([
+    options.initialScreenshot,
+    options.currentScreenshot,
+  ]);
 
   const img1 = files.find(({ path }) => path.match('-orig')).file;
   const img2 = files.find(({ path }) => path.match('-comp')).file;

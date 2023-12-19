@@ -1,3 +1,4 @@
+/// <reference types="cypress/types/cypress" />
 declare namespace Cypress {
   interface Tresholdable {
     treshold?: number;
@@ -5,7 +6,7 @@ declare namespace Cypress {
   interface CompareScreenshotOptions extends ScreenshotOptions {
     withHidden: string[];
   }
-  interface Chainable {
+  interface Chainable<Subject = any> {
     /**
      * Custom command to select DOM element by data-cy attribute.
      * @example cy.dataCy('greeting')

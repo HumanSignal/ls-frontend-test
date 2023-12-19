@@ -18,7 +18,7 @@ export const Relations = {
    * Get relation by index or by from/to labels
    * @param args
    */
-  relation(...args: RelationArgs): Chainable<JQuery<HTMLElement>> {
+  getRelation(...args: RelationArgs): Chainable<JQuery<HTMLElement>> {
     if (args.length === 1) {
       const idx: number = args[0];
 
@@ -41,7 +41,7 @@ export const Relations = {
    * @param relationArgs
    */
   hasRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs).should('be.visible');
+    this.getRelation(...relationArgs).should('be.visible');
   },
   /**
    * Check that relation has specific direction
@@ -49,7 +49,7 @@ export const Relations = {
    * @param relationArgs
    */
   hasRelationDirection(direction: Direction, ...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find(`[data-direction="${direction}"]`)
       .should('be.visible');
   },
@@ -63,7 +63,7 @@ export const Relations = {
       labels = [labels];
     }
 
-    const $selector = this.relation(...relationArgs)
+    const $selector = this.getRelation(...relationArgs)
       .find('.lsf-relation-meta .ant-select-selection-overflow');
 
     if (labels.length === 0) {
@@ -73,11 +73,11 @@ export const Relations = {
     }
 
     for (const label of labels) {
-      this.relation(...relationArgs).find(`.ant-select-selection-item[title="${label}"]`).should('be.visible');
+      this.getRelation(...relationArgs).find(`.ant-select-selection-item[title="${label}"]`).should('be.visible');
     }
   },
-  addRelationLabel(label: string, ...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+  addLabelToRelation(label: string, ...relationArgs: RelationArgs) {
+    this.getRelation(...relationArgs)
       .find('.lsf-relation-meta .ant-select-selector')
       .click()
       .find('.ant-select-selection-search-input')
@@ -89,35 +89,35 @@ export const Relations = {
    * @param relationArgs
    */
   isHiddenRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs).should('have.class', 'lsf-relations__item_hidden');
+    this.getRelation(...relationArgs).should('have.class', 'lsf-relations__item_hidden');
   },
   /**
    * Check that relation is not hidden
    * @param relationArgs
    */
   isNotHiddenRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs).should('not.have.class', 'lsf-relations__item_hidden');
+    this.getRelation(...relationArgs).should('not.have.class', 'lsf-relations__item_hidden');
   },
   /**
-   * Hover relation to show action buttons
+   * Hover over relation to show action buttons
    * @param relationArgs
    */
-  hoverRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs).trigger('mouseover');
+  hoverOverRelation(...relationArgs: RelationArgs) {
+    this.getRelation(...relationArgs).trigger('mouseover');
   },
   /**
-   * Unhover relation to hide action buttons
+   * Stop hovering over relation to hide action buttons
    * @param relationArgs
    */
-  unhoverRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs).trigger('mouseout');
+  stopHoveringOverRelation(...relationArgs: RelationArgs) {
+    this.getRelation(...relationArgs).trigger('mouseout');
   },
   /**
    * Toggle relation direction
    * @param relationArgs
    */
   toggleRelationDirection(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find('.lsf-relations__direction')
       .parent()
       .click();
@@ -127,7 +127,7 @@ export const Relations = {
    * @param relationArgs
    */
   clickDelete(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find('[aria-label="Delete Relation"]')
       .click();
   },
@@ -136,7 +136,7 @@ export const Relations = {
    * @param relationArgs
    */
   clickShowRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find('[aria-label="Show Relation"]')
       .click();
   },
@@ -145,7 +145,7 @@ export const Relations = {
    * @param relationArgs
    */
   clickHideRelation(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find('[aria-label="Hide Relation"]')
       .click();
   },
@@ -154,7 +154,7 @@ export const Relations = {
    * @param relationArgs
    */
   clickShowRelationLabels(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find('[aria-label="Show Relation Labels"]')
       .click();
   },
@@ -163,7 +163,7 @@ export const Relations = {
    * @param relationArgs
    */
   clickHideRelationLabels(...relationArgs: RelationArgs) {
-    this.relation(...relationArgs)
+    this.getRelation(...relationArgs)
       .find('[aria-label="Hide Relation Labels"]')
       .click();
   },
@@ -172,7 +172,7 @@ export const Relations = {
    * @param relationArgs
    */
   deleteRelationAction(...relationArgs: RelationArgs) {
-    this.hoverRelation(...relationArgs);
+    this.hoverOverRelation(...relationArgs);
     this.clickDelete(...relationArgs);
   },
   /**
@@ -180,18 +180,18 @@ export const Relations = {
    * @param relationArgs
    */
   hideRelationAction(...relationArgs: RelationArgs) {
-    this.hoverRelation(...relationArgs);
+    this.hoverOverRelation(...relationArgs);
     this.clickHideRelation(...relationArgs);
-    this.unhoverRelation(...relationArgs);
+    this.stopHoveringOverRelation(...relationArgs);
   },
   /**
    * Action that shows relation without additional preparations
    * @param relationArgs
    */
   showRelationAction(...relationArgs: RelationArgs) {
-    this.hoverRelation(...relationArgs);
+    this.hoverOverRelation(...relationArgs);
     this.clickShowRelation(...relationArgs);
-    this.unhoverRelation(...relationArgs);
+    this.stopHoveringOverRelation(...relationArgs);
   },
   /**
    * Toggle relation creation mode by button

@@ -7,4 +7,8 @@ export const ToolBar = {
     return this.root
       .find('[aria-label="submit"]');
   },
+
+  clickSubmit() {
+    this.submitBtn.click();
+  },
 };

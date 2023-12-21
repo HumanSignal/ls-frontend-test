@@ -5,7 +5,7 @@ class NumberHelper {
     return '.lsf-number';
   }
 
-  private _rootSelector: string
+  private _rootSelector: string;
 
   constructor(rootSelector) {
     this._rootSelector = rootSelector.replace(/^\&/, this._baseRootSelector);
@@ -18,6 +18,10 @@ class NumberHelper {
   get input() {
     return this.root
       .find('[type="number"]');
+  }
+
+  selectAll() {
+    this.input.type('{selectAll}');
   }
 
   type(text: string) {

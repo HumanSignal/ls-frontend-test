@@ -83,6 +83,8 @@ export const Relations = {
       .find('.ant-select-selection-search-input')
       .type(label)
       .type('{enter}');
+
+    cy.get('body').click();
   },
   /**
    * Check that relation is hidden

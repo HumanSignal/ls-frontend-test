@@ -201,6 +201,33 @@ export const ImageView = {
   pixelRelativeShouldBe(x: number, y: number, color: string) {
     this.getPixelRelative(x, y).should('equal', color);
   },
+  waitForPixel(x: number, y: number, color: string, { timeout = 1000, times = 10 } = {}) {
+    const self = this;
+
+    cy.wrap(new Promise(async cb => {
+      let pixel, k = times;
+      const time = Date.now();
+
+      do {
+        pixel = await (new Promise(resolve => {
+          self.getPixel(x, y).then(resolve);
+        }));
+
+        if (pixel === color) {
+          return cb(pixel);
+        }
+      } while (--k > 0 && (!timeout || timeout > Date.now() - time));
+
+      cb(pixel);
+    })).should('equal', color);
+  },
+  waitForPixelRelative(x: number, y: number, color: string, options?: { timeout?: number, times?: number }) {
+    this.drawingFrame.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+
+      this.waitForPixel(x * bbox.width, y * bbox.height, color, options);
+    });
+  },
   /**
    * Captures a screenshot of an element to compare later
    * @param {string} name name of the screenshot

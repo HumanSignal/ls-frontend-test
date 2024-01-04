@@ -201,25 +201,19 @@ export const ImageView = {
   pixelRelativeShouldBe(x: number, y: number, color: string) {
     this.getPixelRelative(x, y).should('equal', color);
   },
-  waitForPixel(x: number, y: number, color: string, { timeout = 1000, times = 10 } = {}) {
-    const self = this;
-
-    cy.wrap(new Promise(async cb => {
-      let pixel, k = times;
-      const time = Date.now();
-
-      do {
-        pixel = await (new Promise(resolve => {
-          self.getPixel(x, y).then(resolve);
-        }));
-
-        if (pixel === color) {
-          return cb(pixel);
+  waitForPixel(x: number, y: number, color: string, { timeout = 1000, attempts = 10, delayBetweenAttempts = 100 } = {}) {
+    const timeEdge = Date.now() + timeout;
+    const waitForPixel = (attemptsLeft) => {
+      return this.getPixel(x, y).then(pixel => {
+        if (pixel === color || timeEdge < Date.now() || !attemptsLeft) {
+          return pixel;
+        } else {
+          return cy.wait(delayBetweenAttempts).then(() => waitForPixel(attemptsLeft - 1));
         }
-      } while (--k > 0 && (!timeout || timeout > Date.now() - time));
+      });
+    };
 
-      cb(pixel);
-    })).should('equal', color);
+    waitForPixel(attempts).should('equal', color);
   },
   waitForPixelRelative(x: number, y: number, color: string, options?: { timeout?: number, times?: number }) {
     this.drawingFrame.then(el => {

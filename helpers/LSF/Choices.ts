@@ -1,19 +1,17 @@
-import { LabelStudio } from './LabelStudio';
-
 class ChoicesHelper {
   private get _baseRootSelector() {
-    return '.lsf-choices';
+    return ".lsf-choices";
   }
   private getСhoiceSelector() {
-    return '.lsf-choice__item .ant-checkbox + span';
+    return ".lsf-choice__item .ant-checkbox + span";
   }
 
   private getCheckedСhoiceSelector() {
-    return '.lsf-choice__item .ant-checkbox-checked + span';
+    return ".lsf-choice__item .ant-checkbox-checked + span";
   }
 
-  private _rootSelector: string
-  constructor(rootSelector) {
+  private _rootSelector: string;
+  constructor(rootSelector: string) {
     this._rootSelector = rootSelector.replace(/^\&/, this._baseRootSelector);
   }
 
@@ -22,8 +20,7 @@ class ChoicesHelper {
   }
 
   get select() {
-    return this.root
-      .find('.ant-select');
+    return this.root.find(".ant-select");
   }
 
   findChoice(text: string) {
@@ -35,28 +32,24 @@ class ChoicesHelper {
   }
 
   hasCheckedChoice(text: string) {
-    this.findCheckedChoice(text)
-      .should('be.visible');
+    this.findCheckedChoice(text).should("be.visible");
   }
 
   toggleSelect() {
-    this.select
-      .click('right');
+    this.select.click("right");
   }
 
   findOption(text: string) {
-    return cy.get('.ant-select-dropdown')
-      .find('.ant-select-item-option')
+    return cy
+      .get(".ant-select-dropdown")
+      .find(".ant-select-item-option")
       .contains(text);
   }
 }
 
-const Choices = new ChoicesHelper('&:eq(0)');
+const Choices = new ChoicesHelper("&:eq(0)");
 const useChoices = (rootSelector: string) => {
   return new ChoicesHelper(rootSelector);
 };
 
-export {
-  Choices,
-  useChoices
-};
+export { Choices, useChoices };

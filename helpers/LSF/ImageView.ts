@@ -201,6 +201,27 @@ export const ImageView = {
   pixelRelativeShouldBe(x: number, y: number, color: string) {
     this.getPixelRelative(x, y).should('equal', color);
   },
+  waitForPixel(x: number, y: number, color: string, { timeout = 1000, attempts = 10, delayBetweenAttempts = 100 } = {}) {
+    const timeEdge = Date.now() + timeout;
+    const waitForPixel = (attemptsLeft) => {
+      return this.getPixel(x, y).then(pixel => {
+        if (pixel === color || timeEdge < Date.now() || !attemptsLeft) {
+          return pixel;
+        } else {
+          return cy.wait(delayBetweenAttempts).then(() => waitForPixel(attemptsLeft - 1));
+        }
+      });
+    };
+
+    waitForPixel(attempts).should('equal', color);
+  },
+  waitForPixelRelative(x: number, y: number, color: string, options?: { timeout?: number, times?: number }) {
+    this.drawingFrame.then(el => {
+      const bbox: DOMRect = el[0].getBoundingClientRect();
+
+      this.waitForPixel(x * bbox.width, y * bbox.height, color, options);
+    });
+  },
   /**
    * Captures a screenshot of an element to compare later
    * @param {string} name name of the screenshot

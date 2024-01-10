@@ -6,6 +6,7 @@ import * as tasks from './tasks';
 import { disableChromeGPU } from './plugins/disable_gpu';
 import { coverageParallel } from './plugins/coverage_parallel.js';
 import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
+import {deleteVideos} from './plugins/delete_videos.js';
 
 const LSF_PORT = process.env.LSF_PORT ?? '3000';
 const COLLECT_COVERAGE = process.env.COLLECT_COVERAGE === 'true' || process.env.COLLECT_COVERAGE === '1';
@@ -27,6 +28,8 @@ export default function(configModifier, setupNodeEvents) {
     fixturesFolder: localPath('./fixtures'),
     trashAssetsBeforeRuns: false, // Kills ability to run in parallel, must be off
     videoUploadOnPasses: false,
+    videoCompression: false,
+    experimentalInteractiveRunEvents: true,
     env: {
       coverage: COLLECT_COVERAGE,
     },
@@ -44,6 +47,7 @@ export default function(configModifier, setupNodeEvents) {
             return launchOptions;
           }
         });
+        deleteVideos(on, config);
 
         addMatchImageSnapshotPlugin(on, config);
 

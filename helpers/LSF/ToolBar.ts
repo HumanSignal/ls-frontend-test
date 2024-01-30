@@ -59,4 +59,8 @@ export const ToolBar = {
       .eq(annotationIndex)
       .click();
   },
+
+  clickSubmit() {
+    this.submitBtn.click();
+  },
 };

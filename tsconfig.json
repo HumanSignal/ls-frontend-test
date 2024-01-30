@@ -7,5 +7,8 @@
     "types": ["cypress", "node"],
     "typeRoots": ["./types", "./node_modules/@types"]
   },
-  "include": ["**/*.ts"]
+  "include": [
+    "**/*.ts",
+    "node_modules/cypress/types/jquery/JQuery.d.ts"
+  ]
 }
